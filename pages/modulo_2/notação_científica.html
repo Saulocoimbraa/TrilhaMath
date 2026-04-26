@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notação Científica: O Macro e o Micro - TrilhaMath</title>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #ED7C3A;
+            --secondary: #2f4887;
+            --dark: #1F2937;
+            --light: #F3F4F6;
+            --danger: #EF4444;
+            --bg-body: #ffffff;
+        }
+
+        /* Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-logo {
+            height: 30px;
+            mix-blend-mode: multiply;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+        .nav-btn-next {
+            background: var(--primary);
+            color: white !important;
+        }
+        .nav-btn-next:hover {
+            background: #d35400 !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(237, 124, 58, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            padding: 80px 0 0 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 0.1rem;
+            margin-bottom: 2rem;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--primary) !important;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+        }
+
+        .destaque-term {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Mapa Mental */
+        .mm-blogger-container {
+            background-color: #f1f5f9;
+            padding: 40px 10px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .mm-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .mm-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .mm-center {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border-left: 6px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .mm-node-wrapper {
+            flex: 0 1 220px;
+            position: relative;
+            min-height: 50px;
+        }
+
+        .mm-node {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .mm-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .mm-node.active {
+            position: absolute;
+            width: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .mm-node-header {
+            padding: 12px 15px;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .mm-node.active .mm-node-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mm-node-content {
+            padding: 0;
+            max-height: 0;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .mm-node.active .mm-node-content {
+            padding: 15px;
+            max-height: 400px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .mm-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        /* Quiz & VF */
+        .question {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        button.option-btn,
+        button.vf-btn {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        button.option-btn:hover,
+        button.vf-btn:hover {
+            border-color: var(--primary);
+            background: #fffaf0;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #D1FAE5;
+            color: #065F46;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #FEE2E2;
+            color: #991B1B;
+            display: block;
+        }
+
+        /* Flashcards */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .flashcard {
+            background: transparent;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flip .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background-color: white;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            font-weight: bold;
+        }
+
+        .flashcard-back {
+            background-color: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Dictionary */
+        .dict-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+
+        .dict-term {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .img-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d1d5db;
+        }
+
+        .img-placeholder {
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .mm-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .mm-node.active {
+                width: 100%;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="../../index.html" class="nav-link">Início</a>
+        </div>
+        <img src="../../assets/logo-horizontal.png" alt="TrilhaMath" class="nav-logo">
+        <div class="nav-right">
+            <a href="numeros_racionais_II.html" class="nav-link nav-btn-next">Avançar</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Notação Científica: O Macro e o Micro</h1>
+            <p>Aprenda a linguagem que os cientistas usam para medir o universo, da imensidão das galáxias à pequenez dos átomos.</p>
+        </header>
+
+        <section id="introducao">
+            <h2>1. Introdução e Contexto</h2>
+            <div class="img-container">
+                <p class="img-placeholder">[Sugestão de Imagem: Uma composição mostrando o planeta Terra comparado a uma galáxia de um lado, e do outro, o zoom em uma célula e em um átomo, com números gigantes e minúsculos sendo convertidos em notação científica.]</p>
+                <span class="img-caption">A matemática simplifica o imenso e o minúsculo em uma única linguagem.</span>
+            </div>
+            <p>Você já tentou escrever o número de células do corpo humano? São cerca de 37.200.000.000.000. Ou já parou para pensar no tamanho de um vírus? Algo em torno de 0,0000001 metros. Tentar fazer contas com todos esses zeros é um convite ao erro: basta esquecer um único "0" para que o seu cálculo de engenharia ou medicina seja completamente arruinado. Para resolver esse problema de escala, os cientistas criaram uma forma elegante e compacta de escrever qualquer número, não importa quão grande ou pequeno ele seja: a <span class="destaque-term">Notação Científica</span>. Ela utiliza o poder das potências de base 10 para "limpar" o excesso de zeros e focar no que realmente importa.</p>
+            <p>Imagine um astrônomo calculando a distância da Terra até a estrela mais próxima, a Proxima Centauri: são 40 trilhões de quilômetros. Escrever isso em um computador ocuparia muito espaço e dificultaria a leitura. Com a notação científica, esse número se torna apenas \( 4 \times 10^{13} \). Do outro lado, um biólogo medindo o diâmetro de um DNA usa a mesma lógica para transformar 0,000000002 metros em \( 2 \times 10^{-9} \). Essa padronização permite que pesquisadores do mundo todo compartilhem dados com precisão absoluta, garantindo que telescópios espaciais e microscópios eletrônicos falem a mesma língua matemática.</p>
+            <p>Nesta lição, vamos aprender a regra de ouro da notação científica: como transformar qualquer valor em um número entre 1 e 10 multiplicado por uma potência de 10. Vamos descobrir como a posição da vírgula determina se o expoente será positivo (para números grandes) ou negativo (para números minúsculos). Dominar essa técnica é fundamental para quem quer seguir carreiras em ciência, tecnologia, engenharia e saúde, pois ela é a ferramenta padrão em todos os laboratórios e centros de pesquisa do planeta. Prepare-se para "encolher" o universo na palma da sua mão e ganhar a agilidade necessária para navegar pelas escalas mais extremas da natureza!</p>
+        </section>
+
+        <section id="teoria">
+            <h2>2. Teoria e Exemplos</h2>
+            <p>A Notação Científica é uma forma de escrever números seguindo o padrão: \( m \times 10^n \).</p>
+            
+            <h3>A. A Mantissa (m)</h3>
+            <p>A <span class="destaque-term">Mantissa</span> é o número principal. Ela deve ser sempre maior ou igual a 1 e menor que 10. 
+            \[ 1 \leq m < 10 \]</p>
+            
+            <h3>B. O Expoente (n)</h3>
+            <p>O <span class="destaque-term">Expoente</span> indica quantas casas a vírgula "andou":</p>
+            <ul>
+                <li><strong>Positivo (+):</strong> Se o número original era grande (a vírgula andou para a esquerda).</li>
+                <li><strong>Negativo (-):</strong> Se o número original era pequeno (a vírgula andou para a direita).</li>
+            </ul>
+            
+            <h3>C. Exemplos Práticos</h3>
+            <ol>
+                <li><strong>Número Grande:</strong> 5.000.000 = \( 5 \times 10^6 \). (A vírgula andou 6 casas para a esquerda).</li>
+                <li><strong>Número Pequeno:</strong> 0,0004 = \( 4 \times 10^{-4} \). (A vírgula andou 4 casas para a direita).</li>
+            </ol>
+        </section>
+
+        <section id="mapa-mental">
+            <h2>3. Mapa Mental</h2>
+            <div class="mm-blogger-container">
+                <div class="mm-wrapper">
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Estrutura Padrão <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A notação científica segue uma estrutura rígida composta por um número real (mantissa) multiplicado por uma potência de base 10. A mantissa deve obrigatoriamente estar no intervalo entre 1 e 9,99... Esse padrão garante que todos os cientistas, independentemente do país, representem o mesmo valor de forma idêntica, facilitando a leitura imediata da ordem de grandeza do número e evitando ambiguidades em publicações técnicas e acadêmicas.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Expoente Positivo <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Usamos o expoente positivo para representar o 'Macro' mundo: distâncias astronômicas, populações mundiais, fortunas financeiras ou a quantidade de átomos em uma amostra. Ele indica quantas vezes a mantissa deve ser multiplicada por 10. Visualmente, o expoente positivo nos diz quantas casas decimais a vírgula deve se deslocar para a direita para retornar ao formato original do número grande, simplificando a escrita de valores que possuem muitos zeros.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mm-center"><h3>NOTAÇÃO CIENTÍFICA</h3></div>
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Expoente Negativo <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">O expoente negativo é a chave para o 'Micro' mundo. Ele representa frações decimais extremamente pequenas, como o tamanho de vírus, espessuras de membranas celulares ou a massa de um elétron. Matematicamente, um expoente negativo indica uma divisão por potências de 10. Ele nos mostra quantas casas decimais a vírgula 'saltou' para a direita para tornar o número legível, transformando valores quase invisíveis em expressões matemáticas fáceis de manipular e calcular.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Vantagens Reais <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Além da compactação, a notação científica permite realizar operações de multiplicação e divisão com números extremos de forma quase instantânea, usando as propriedades das potências. Na astronomia, permite calcular o tempo de viagem da luz entre estrelas; na química, facilita o cálculo de molaridade; e na computação, ajuda a entender as velocidades de processamento em nano-segundos. É a ferramenta definitiva para quem precisa de precisão e rapidez em ambientes de alta tecnologia.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="atividades-mc">
+            <h2>4. Atividades: Múltipla Escolha</h2>
+            <div class="question" id="q1">
+                <p><span class="destaque-term">Questão 1:</span> A distância média da Terra à Lua é de aproximadamente 384.000 km. Como esse número é escrito em notação científica?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q1', 'A', 'B')">A) \( 38,4 \times 10^4 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'B', 'B')">B) \( 3,84 \times 10^5 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'C', 'B')">C) \( 3,84 \times 10^3 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'D', 'B')">D) \( 0,384 \times 10^6 \)</button>
+                </div>
+                <div class="feedback" id="fb-q1">Regra: A vírgula deve ficar após o 3 (mantissa entre 1 e 10). Ela andou 5 casas para a esquerda.</div>
+            </div>
+            <div class="question" id="q2">
+                <p><span class="destaque-term">Questão 2:</span> O tamanho de um glóbulo vermelho é de cerca de 0,000007 metros. Qual a representação correta em notação científica?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q2', 'A', 'C')">A) \( 7 \times 10^6 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'B', 'C')">B) \( 0,7 \times 10^{-5} \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'C', 'C')">C) \( 7 \times 10^{-6} \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'D', 'C')">D) \( 7 \times 10^{-5} \)</button>
+                </div>
+                <div class="feedback" id="fb-q2">Regra: Para números pequenos, o expoente é negativo. A vírgula andou 6 casas para a direita até o 7.</div>
+            </div>
+            <div class="question" id="q3">
+                <p><span class="destaque-term">Questão 3:</span> O número \( 4,5 \times 10^4 \) escrito na forma comum (decimal) equivale a:</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q3', 'A', 'A')">A) 45.000</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'B', 'A')">B) 4.500</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'C', 'A')">C) 450.000</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'D', 'A')">D) 0,00045</button>
+                </div>
+                <div class="feedback" id="fb-q3">Conversão: Expoente 4 positivo significa andar com a vírgula 4 casas para a direita: 4,5 -> 45 -> 450 -> 4.500 -> 45.000.</div>
+            </div>
+        </section>
+
+        <section id="atividades-vf">
+            <h2>5. Atividades: Verdadeiro ou Falso</h2>
+            <div class="question" id="vf1">
+                <p><span class="destaque-term">1.</span> O número \( 25 \times 10^3 \) está escrito corretamente em notação científica.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'V', 'F')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'F', 'F')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf1">Falso! A mantissa deve ser menor que 10. O correto seria \( 2,5 \times 10^4 \).</div>
+            </div>
+            <div class="question" id="vf2">
+                <p><span class="destaque-term">2.</span> Quanto maior o expoente negativo, menor é o valor real do número.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf2">Verdadeiro! \( 10^{-9} \) (nanômetro) é mil vezes menor que \( 10^{-6} \) (micrômetro).</div>
+            </div>
+            <div class="question" id="vf3">
+                <p><span class="destaque-term">3.</span> A notação científica facilita a realização de multiplicações e divisões entre números muito grandes.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf3">Verdadeiro! Basta multiplicar as mantissas e aplicar as propriedades de soma/subtração nos expoentes.</div>
+            </div>
+        </section>
+
+        <section id="flashcards">
+            <h2>6. Flashcards</h2>
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Formato padrão?</div><div class="flashcard-back">m x 10^n.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Limite da mantissa?</div><div class="flashcard-back">Entre 1 e 9,99...</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Exp. Positivo?</div><div class="flashcard-back">Números Grandes.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Exp. Negativo?</div><div class="flashcard-back">Números Pequenos.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">10 ao cubo (10^3)?</div><div class="flashcard-back">1.000.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">10 a -1 (10^-1)?</div><div class="flashcard-back">0,1.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Andar p/ esquerda?</div><div class="flashcard-back">Aumenta o expoente.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Andar p/ direita?</div><div class="flashcard-back">Diminui o expoente.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é n?</div><div class="flashcard-back">A ordem de grandeza.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Unidade de m?</div><div class="flashcard-back">Sempre uma única unidade (ex: 3, ...).</div></div></div>
+            </div>
+        </section>
+
+        <section id="dicionario">
+            <h2>7. Dicionário</h2>
+            <div class="dict-item"><span class="dict-term">Astronômico:</span> Relativo às imensas distâncias e magnitudes do espaço sideral.</div>
+            <div class="dict-item"><span class="dict-term">Compactação:</span> Ato de tornar uma expressão numérica menor sem perder informação.</div>
+            <div class="dict-item"><span class="dict-term">Decimal:</span> Sistema numérico de base 10 que fundamenta a notação científica.</div>
+            <div class="dict-item"><span class="dict-term">Deslocamento:</span> O movimento da vírgula que define o valor do expoente.</div>
+            <div class="dict-item"><span class="dict-term">Expoente:</span> O número que indica a potência de dez na notação.</div>
+            <div class="dict-item"><span class="dict-term">Glóbulo:</span> Exemplo de estrutura microscópica medida com expoentes negativos.</div>
+            <div class="dict-item"><span class="dict-term">Grandeza:</span> Escala de tamanho ou importância de um valor numérico.</div>
+            <div class="dict-item"><span class="dict-term">Macro:</span> Prefixo para escalas gigantescas, visíveis a olho nu ou telescópios.</div>
+            <div class="dict-item"><span class="dict-term">Mantissa:</span> A parte numérica real da notação científica, entre 1 e 10.</div>
+            <div class="dict-item"><span class="dict-term">Micro:</span> Prefixo para escalas minúsculas, visíveis apenas por microscópios.</div>
+            <div class="dict-item"><span class="dict-term">Nanômetro:</span> Unidade de medida minúscula (\( 10^{-9} \) metros).</div>
+            <div class="dict-item"><span class="dict-term">Padronização:</span> Acordo entre cientistas para usar o mesmo formato de registro.</div>
+            <div class="dict-item"><span class="dict-term">Potência:</span> Operação de base e expoente que sustenta a notação científica.</div>
+            <div class="dict-item"><span class="dict-term">Precisão:</span> Rigor matemático necessário para evitar erros em escalas extremas.</div>
+            <div class="dict-item"><span class="dict-term">Vírgula:</span> O marcador que separa a mantissa das ordens de magnitude.</div>
+        </section>
+
+        <section id="materiais">
+            <h2>8. Materials Complementares</h2>
+            <ul>
+                <li><a href="https://pt.khanacademy.org/math/pre-algebra/pre-algebra-exponents-radicals/pre-algebra-scientific-notation" target="_blank">Khan Academy: Notação Científica</a> - Prática de conversão.</li>
+                <li><a href="https://www.youtube.com/watch?v=escalas-do-universo" target="_blank">Vídeo: As Escalas do Universo</a> - Uma viagem do átomo às galáxias.</li>
+                <li><a href="https://htwins.net/scale2/" target="_blank">The Scale of the Universe 2</a> - Site interativo incrível sobre magnitudes.</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+    // Função para múltipla escolha e V/F
+    function checkAnswer(questionId, selected, correct) {
+        let fbDiv = document.getElementById('fb-' + questionId);
+        if (!fbDiv) return;
+        if (selected === correct) {
+            fbDiv.classList.add('correct');
+            fbDiv.classList.remove('incorrect');
+        } else {
+            fbDiv.classList.add('incorrect');
+            fbDiv.classList.remove('correct');
+        }
+        fbDiv.style.display = 'block';
+        fbDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Inicialização do mapa mental (expansão dos nós)
+    (function() {
+        const nodes = document.querySelectorAll('.mm-node');
+        if (nodes.length === 0) return;
+        nodes.forEach(node => {
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isActive = this.classList.contains('active');
+                nodes.forEach(n => {
+                    n.classList.remove('active');
+                    const icon = n.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '+';
+                    n.style.zIndex = '10';
+                });
+                if (!isActive) {
+                    this.classList.add('active');
+                    this.style.zIndex = '100';
+                    const icon = this.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '-';
+                }
+            });
+        });
+        document.addEventListener('click', function() {
+            nodes.forEach(n => {
+                n.classList.remove('active');
+                const icon = n.querySelector('.mm-icon');
+                if (icon) icon.textContent = '+';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

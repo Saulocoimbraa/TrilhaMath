@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potenciação: O Poder do Crescimento - TrilhaMath</title>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #ED7C3A;
+            --secondary: #2f4887;
+            --dark: #1F2937;
+            --light: #F3F4F6;
+            --danger: #EF4444;
+            --bg-body: #ffffff;
+        }
+
+        /* Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-logo {
+            height: 30px;
+            mix-blend-mode: multiply;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+        .nav-btn-next {
+            background: var(--primary);
+            color: white !important;
+        }
+        .nav-btn-next:hover {
+            background: #d35400 !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(237, 124, 58, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            padding: 80px 0 0 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 0.1rem;
+            margin-bottom: 2rem;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--primary) !important;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+        }
+
+        .destaque-term {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Mapa Mental */
+        .mm-blogger-container {
+            background-color: #f1f5f9;
+            padding: 40px 10px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .mm-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .mm-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .mm-center {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border-left: 6px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .mm-node-wrapper {
+            flex: 0 1 220px;
+            position: relative;
+            min-height: 50px;
+        }
+
+        .mm-node {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .mm-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .mm-node.active {
+            position: absolute;
+            width: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .mm-node-header {
+            padding: 12px 15px;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .mm-node.active .mm-node-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mm-node-content {
+            padding: 0;
+            max-height: 0;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .mm-node.active .mm-node-content {
+            padding: 15px;
+            max-height: 400px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .mm-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        /* Quiz & VF */
+        .question {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        button.option-btn,
+        button.vf-btn {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        button.option-btn:hover,
+        button.vf-btn:hover {
+            border-color: var(--primary);
+            background: #fffaf0;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #D1FAE5;
+            color: #065F46;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #FEE2E2;
+            color: #991B1B;
+            display: block;
+        }
+
+        /* Flashcards */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .flashcard {
+            background: transparent;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flip .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background-color: white;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            font-weight: bold;
+        }
+
+        .flashcard-back {
+            background-color: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Dictionary */
+        .dict-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+
+        .dict-term {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .img-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d1d5db;
+        }
+
+        .img-placeholder {
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .mm-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .mm-node.active {
+                width: 100%;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="../../index.html" class="nav-link">Início</a>
+        </div>
+        <img src="../../assets/logo-horizontal.png" alt="TrilhaMath" class="nav-logo">
+        <div class="nav-right">
+            <a href="radiciacao.html" class="nav-link nav-btn-next">Avançar</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Potenciação: O Poder do Crescimento</h1>
+            <p>Descubra como os números ganham velocidade e entenda os fenômenos que crescem de forma explosiva ao nosso redor.</p>
+        </header>
+
+        <section id="introducao">
+            <h2>1. Introdução e Contexto</h2>
+            <div class="img-container">
+                <p class="img-placeholder">[Sugestão de Imagem: Uma ilustração mostrando a divisão celular (uma célula virando duas, duas virando quatro), um gráfico de crescimento viral em redes sociais e uma explosão atômica estilizada, representando o poder da multiplicação repetida.]</p>
+                <span class="img-caption">A potência é a matemática da aceleração e do crescimento em escala.</span>
+            </div>
+            <p>Você já ouviu falar que uma fofoca se espalha "exponencialmente"? Ou já viu como um vídeo "viraliza" na internet, atingindo milhões de pessoas em poucas horas? Esse fenômeno não é mágica; é pura matemática. Quando algo cresce por multiplicação repetida, estamos entrando no domínio da <span class="destaque-term">Potenciação</span>. Diferente da adição, onde as coisas aumentam de forma constante e lenta, na potência o crescimento é explosivo. É a diferença entre subir uma escada degrau por degrau e subir em um foguete que dobra de velocidade a cada segundo. Entender potências é essencial para compreender como doenças se espalham, como o dinheiro rende em investimentos e até como a energia é gerada no sol.</p>
+            <p>Imagine uma única bactéria que se divide em duas a cada hora. Em 24 horas, você não terá apenas 48 bactérias (que seria o resultado de uma soma simples), mas sim mais de 16 milhões! Esse é o poder da base 2 elevada ao expoente 24. Na tecnologia, a potência é o que permite que seu celular seja milhares de vezes mais rápido que os computadores que levaram o homem à Lua: a densidade de processadores cresce em potências de dois a cada dois anos. No mercado financeiro, os famosos "juros compostos" nada mais são do que potências trabalhando a favor (ou contra) o seu bolso. Dominar esse conceito permite que você tome decisões financeiras melhores e entenda a escala real dos fenômenos globais.</p>
+            <p>Nesta lição, vamos desvendar a anatomia de uma potência: a base, que é o número que se repete, e o expoente, que é o "chefe" que diz quantas vezes a base deve ser multiplicada por ela mesma. Vamos explorar as propriedades mágicas que nos permitem simplificar cálculos gigantescos e entender por que qualquer número elevado a zero é igual a um (sim, existe uma lógica brilhante por trás disso!). Prepare-se para ampliar sua percepção de escala e descobrir que, com a potenciação, você ganha a habilidade de calcular o imenso e o minúsculo com a mesma facilidade. É hora de dar um "upgrade" no seu raciocínio lógico e dominar a matemática do crescimento!</p>
+        </section>
+
+        <section id="teoria">
+            <h2>2. Teoria e Exemplos</h2>
+            <p>A potenciação é uma operação matemática que representa a multiplicação de fatores iguais.</p>
+            
+            <h3>A. Estrutura da Potência</h3>
+            <p>Em uma expressão como \( a^n \):</p>
+            <ul>
+                <li><strong>Base (a):</strong> O fator que se repete.</li>
+                <li><strong>Expoente (n):</strong> O número de vezes que a base é multiplicada.</li>
+                <li><strong>Potência:</strong> O resultado final da operação.</li>
+            </ul>
+            <p>\[ 2^3 = 2 \times 2 \times 2 = 8 \]</p>
+            
+            <h3>B. Propriedades Fundamentais</h3>
+            <p>As propriedades ajudam a "encurtar" o caminho em contas complexas:</p>
+            <ol>
+                <li><strong>Produto de mesma base:</strong> Conserve a base e some os expoentes. \( a^m \times a^n = a^{m+n} \).</li>
+                <li><strong>Divisão de mesma base:</strong> Conserve a base e subtraia os expoentes. \( a^m \div a^n = a^{m-n} \).</li>
+                <li><strong>Potência de Potência:</strong> Conserve a base e multiplique os expoentes. \( (a^m)^n = a^{m \times n} \).</li>
+            </ol>
+            
+            <h3>C. Casos Especiais</h3>
+            <ul>
+                <li>Qualquer número (diferente de zero) elevado a 0 é 1. \( a^0 = 1 \).</li>
+                <li>Qualquer número elevado a 1 é ele mesmo. \( a^1 = a \).</li>
+                <li>Base 10: O expoente indica quantos zeros o resultado terá. \( 10^3 = 1000 \).</li>
+            </ul>
+        </section>
+
+        <section id="mapa-mental">
+            <h2>3. Mapa Mental</h2>
+            <div class="mm-blogger-container">
+                <div class="mm-wrapper">
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Conceito Base <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A potenciação é essencialmente uma forma abreviada e poderosa de escrever uma multiplicação de fatores idênticos. Ela introduz a ideia de crescimento não-linear, onde pequenos aumentos no expoente geram resultados gigantescos na potência final. É a operação fundamental para descrever fenômenos de aceleração na física, replicação biológica e o processamento de dados binários em computação, onde tudo é baseado em potências de base 2 (bits, bytes, gigabytes).</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Propriedades <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">As propriedades das potências são ferramentas de simplificação que transformam multiplicações difíceis em somas simples de expoentes e divisões complexas em subtrações. Elas são as leis que permitem aos cientistas manipular números extremamente grandes (como a massa da Terra) ou extremamente pequenos (como o tamanho de um átomo) sem perder a precisão. Dominar essas regras é como aprender atalhos em um mapa, permitindo chegar ao resultado com muito menos esforço computacional.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mm-center"><h3>POTENCIAÇÃO</h3></div>
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Expoentes Especiais <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Os expoentes zero e um, além dos expoentes negativos, expandem o conceito de potência para além da simples contagem. O expoente zero (resultado 1) e o expoente negativo (que indica o inverso da base, ou seja, uma fração) são vitais para a álgebra avançada e para a notação científica. Eles permitem representar decaimentos radioativos, a diluição de substâncias químicas e a escala de valores em sistemas de áudio e decibéis, onde a variação ocorre em ordens de magnitude.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Aplicações Reais <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Na vida prática, a potenciação governa o mundo das finanças através dos juros compostos, onde o seu dinheiro 'trabalha' sobre ele mesmo em uma curva exponencial. Na tecnologia, a Lei de Moore descreve o avanço dos chips baseado em potências. Na biologia, prevemos epidemias usando modelos exponenciais. Entender potências é ter a capacidade de prever o futuro de sistemas que se auto-replicam, permitindo uma visão estratégica sobre investimentos, saúde pública e evolução tecnológica.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="atividades-mc">
+            <h2>4. Atividades: Múltipla Escolha</h2>
+            <div class="question" id="q1">
+                <p><span class="destaque-term">Questão 1:</span> Uma determinada bactéria se duplica a cada hora. Se começarmos com 1 única bactéria, quantas bactérias teremos após 5 horas?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q1', 'A', 'C')">A) 10 bactérias</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'B', 'C')">B) 25 bactérias</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'C', 'C')">C) 32 bactérias</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'D', 'C')">D) 64 bactérias</button>
+                </div>
+                <div class="feedback" id="fb-q1">Cálculo: É uma potência de base 2. \( 2^5 = 2 \times 2 \times 2 \times 2 \times 2 = 32 \).</div>
+            </div>
+            <div class="question" id="q2">
+                <p><span class="destaque-term">Questão 2:</span> Simplificando a expressão \( 3^2 \times 3^4 \), obtemos qual resultado final?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q2', 'A', 'D')">A) \( 9^6 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'B', 'D')">B) \( 3^8 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'C', 'D')">C) \( 3^2 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'D', 'D')">D) \( 3^6 \)</button>
+                </div>
+                <div class="feedback" id="fb-q2">Propriedade: No produto de mesma base, somamos os expoentes. \( 2 + 4 = 6 \). Portanto, \( 3^6 \).</div>
+            </div>
+            <div class="question" id="q3">
+                <p><span class="destaque-term">Questão 3:</span> Qual o valor da expressão \( (5^2)^3 \)?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q3', 'A', 'A')">A) \( 5^6 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'B', 'A')">B) \( 5^5 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'C', 'A')">C) \( 25^2 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'D', 'A')">D) \( 5^8 \)</button>
+                </div>
+                <div class="feedback" id="fb-q3">Propriedade: Potência de potência, multiplicamos os expoentes. \( 2 \times 3 = 6 \). Resultado: \( 5^6 \).</div>
+            </div>
+        </section>
+
+        <section id="atividades-vf">
+            <h2>5. Atividades: Verdadeiro ou Falso</h2>
+            <div class="question" id="vf1">
+                <p><span class="destaque-term">1.</span> O resultado de \( 7^0 \) é igual a 0.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'V', 'F')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'F', 'F')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf1">Falso! Pela regra, qualquer número (exceto zero) elevado a zero é sempre 1.</div>
+            </div>
+            <div class="question" id="vf2">
+                <p><span class="destaque-term">2.</span> Na operação \( 5^3 \), o número 5 é a base e o número 3 é o expoente.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf2">Verdadeiro! 5 é o fator que se repete e 3 é a quantidade de vezes.</div>
+            </div>
+            <div class="question" id="vf3">
+                <p><span class="destaque-term">3.</span> A operação \( 2^4 \) resulta no mesmo valor que \( 4^2 \).</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf3">Verdadeiro! \( 2^4 = 16 \) e \( 4^2 = 16 \). (Embora nem sempre a troca de base e expoente resulte no mesmo valor!).</div>
+            </div>
+        </section>
+
+        <section id="flashcards">
+            <h2>6. Flashcards</h2>
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é a Base?</div><div class="flashcard-back">O número que se repete na multiplicação.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é o Expoente?</div><div class="flashcard-back">Indica quantas vezes a base se repete.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Expoente = 0?</div><div class="flashcard-back">O resultado é sempre 1.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Expoente = 1?</div><div class="flashcard-back">O resultado é a própria base.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Mult. mesma base?</div><div class="flashcard-back">Soma os expoentes.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Div. mesma base?</div><div class="flashcard-back">Subtrai os expoentes.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Potência de Potência?</div><div class="flashcard-back">Multiplica os expoentes.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">10 ao quadrado?</div><div class="flashcard-back">100.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">2 ao cubo?</div><div class="flashcard-back">8.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Base 10, exp 6?</div><div class="flashcard-back">1.000.000 (um milhão).</div></div></div>
+            </div>
+        </section>
+
+        <section id="dicionario">
+            <h2>7. Dicionário</h2>
+            <div class="dict-item"><span class="dict-term">Base:</span> O número que será multiplicado por si mesmo sucessivamente.</div>
+            <div class="dict-item"><span class="dict-term">Binário:</span> Sistema de base 2, fundamental para a computação moderna.</div>
+            <div class="dict-item"><span class="dict-term">Crescimento:</span> Aumento de uma quantidade ao longo do tempo ou de uma escala.</div>
+            <div class="dict-item"><span class="dict-term">Cubo:</span> Nome especial dado a uma potência de expoente três.</div>
+            <div class="dict-item"><span class="dict-term">Exponencial:</span> Tipo de crescimento que se torna cada vez mais rápido.</div>
+            <div class="dict-item"><span class="dict-term">Expoente:</span> O pequeno número acima da base que comanda a operação.</div>
+            <div class="dict-item"><span class="dict-term">Fator:</span> Cada um dos números envolvidos em uma multiplicação.</div>
+            <div class="dict-item"><span class="dict-term">Inverso:</span> Representado por expoentes negativos, inverte a posição da base.</div>
+            <div class="dict-item"><span class="dict-term">Juros Compostos:</span> Aplicação financeira baseada em potenciação (juros sobre juros).</div>
+            <div class="dict-item"><span class="dict-term">Magnitude:</span> A escala de tamanho de um número, geralmente em potências de 10.</div>
+            <div class="dict-item"><span class="dict-term">Não-linear:</span> Algo que não cresce de forma constante (como uma linha reta).</div>
+            <div class="dict-item"><span class="dict-term">Potência:</span> O resultado final de uma operação de potenciação.</div>
+            <div class="dict-item"><span class="dict-term">Produto:</span> Resultado de uma multiplicação (essência da potência).</div>
+            <div class="dict-item"><span class="dict-term">Quadrado:</span> Nome especial dado a uma potência de expoente dois.</div>
+            <div class="dict-item"><span class="dict-term">Simplificação:</span> Uso de propriedades para tornar um cálculo mais fácil.</div>
+        </section>
+
+        <section id="materiais">
+            <h2>8. Materials Complementares</h2>
+            <ul>
+                <li><a href="https://pt.khanacademy.org/math/pre-algebra/pre-algebra-exponents-radicals" target="_blank">Khan Academy: Potências e Raízes</a> - Curso completo.</li>
+                <li><a href="https://www.youtube.com/watch?v=crescimento-exponencial" target="_blank">Vídeo: O Poder do Crescimento Exponencial</a> - Exemplos visuais incríveis.</li>
+                <li><a href="https://www.mathsisfun.com/exponent.html" target="_blank">Math is Fun: Exponents</a> - Prática interativa e visual (em inglês).</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+    // Função para múltipla escolha e V/F
+    function checkAnswer(questionId, selected, correct) {
+        let fbDiv = document.getElementById('fb-' + questionId);
+        if (!fbDiv) return;
+        if (selected === correct) {
+            fbDiv.classList.add('correct');
+            fbDiv.classList.remove('incorrect');
+        } else {
+            fbDiv.classList.add('incorrect');
+            fbDiv.classList.remove('correct');
+        }
+        fbDiv.style.display = 'block';
+        fbDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Inicialização do mapa mental (expansão dos nós)
+    (function() {
+        const nodes = document.querySelectorAll('.mm-node');
+        if (nodes.length === 0) return;
+        nodes.forEach(node => {
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isActive = this.classList.contains('active');
+                nodes.forEach(n => {
+                    n.classList.remove('active');
+                    const icon = n.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '+';
+                    n.style.zIndex = '10';
+                });
+                if (!isActive) {
+                    this.classList.add('active');
+                    this.style.zIndex = '100';
+                    const icon = this.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '-';
+                }
+            });
+        });
+        document.addEventListener('click', function() {
+            nodes.forEach(n => {
+                n.classList.remove('active');
+                const icon = n.querySelector('.mm-icon');
+                if (icon) icon.textContent = '+';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

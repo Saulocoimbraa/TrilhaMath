@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Razão e Proporção: A Comparação Inteligente - TrilhaMath</title>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #ED7C3A;
+            --secondary: #2f4887;
+            --dark: #1F2937;
+            --light: #F3F4F6;
+            --danger: #EF4444;
+            --bg-body: #ffffff;
+        }
+
+        /* Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-logo {
+            height: 30px;
+            mix-blend-mode: multiply;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+        .nav-btn-next {
+            background: var(--primary);
+            color: white !important;
+        }
+        .nav-btn-next:hover {
+            background: #d35400 !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(237, 124, 58, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            padding: 80px 0 0 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 0.1rem;
+            margin-bottom: 2rem;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--primary) !important;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+        }
+
+        .destaque-term {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Mapa Mental */
+        .mm-blogger-container {
+            background-color: #f1f5f9;
+            padding: 40px 10px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .mm-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .mm-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .mm-center {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border-left: 6px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .mm-node-wrapper {
+            flex: 0 1 220px;
+            position: relative;
+            min-height: 50px;
+        }
+
+        .mm-node {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .mm-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .mm-node.active {
+            position: absolute;
+            width: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .mm-node-header {
+            padding: 12px 15px;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .mm-node.active .mm-node-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mm-node-content {
+            padding: 0;
+            max-height: 0;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .mm-node.active .mm-node-content {
+            padding: 15px;
+            max-height: 400px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .mm-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        /* Quiz & VF */
+        .question {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        button.option-btn,
+        button.vf-btn {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        button.option-btn:hover,
+        button.vf-btn:hover {
+            border-color: var(--primary);
+            background: #fffaf0;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #D1FAE5;
+            color: #065F46;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #FEE2E2;
+            color: #991B1B;
+            display: block;
+        }
+
+        /* Flashcards */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .flashcard {
+            background: transparent;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flip .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background-color: white;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            font-weight: bold;
+        }
+
+        .flashcard-back {
+            background-color: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Dictionary */
+        .dict-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+
+        .dict-term {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .img-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d1d5db;
+        }
+
+        .img-placeholder {
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .mm-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .mm-node.active {
+                width: 100%;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="../../index.html" class="nav-link">Início</a>
+        </div>
+        <img src="../../assets/logo-horizontal.png" alt="TrilhaMath" class="nav-logo">
+        <div class="nav-right">
+            <a href="grandezas_proporcionais.html" class="nav-link nav-btn-next">Avançar</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Razão e Proporção: A Comparação Inteligente</h1>
+            <p>Aprenda a comparar grandezas e descubra a harmonia matemática que mantém o equilíbrio entre as medidas do mundo real.</p>
+        </header>
+
+        <section id="introducao">
+            <h2>1. Introdução e Contexto</h2>
+            <div class="img-container">
+                <p class="img-placeholder">[Sugestão de Imagem: Uma mão segurando um mapa com uma lupa destacando a escala (ex: 1:100.000) e uma garrafa de suco concentrado com instruções de diluição (1 parte de suco para 5 de água).]</p>
+                <span class="img-caption">A razão é a forma mais simples e poderosa de comparar dois números.</span>
+            </div>
+            <p>Você já tentou seguir uma receita de bolo para 4 pessoas quando, na verdade, precisava alimentar 20 convidados? Ou já se perguntou como um arquiteto consegue desenhar um prédio inteiro em uma folha de papel sem que ele pareça "torto" ou estranho? O segredo para essas adaptações reside nos conceitos de <span class="destaque-term">Razão e Proporção</span>. Na matemática, a razão é simplesmente uma divisão que compara duas quantidades. Ela nos diz, por exemplo, que para cada 2 litros de tinta azul, usamos 1 litro de tinta branca para chegar ao tom desejado. Já a proporção é a igualdade entre duas razões, garantindo que o equilíbrio se mantenha mesmo quando as quantidades totais mudam. É a ferramenta que permite "esticar" ou "encolher" a realidade sem perder a sua essência.</p>
+            <p>No cotidiano, a razão é o motor da eficiência econômica e técnica. Quando você vê o preço de um produto por quilo no supermercado, está olhando para uma razão. Quando um médico calcula a dosagem de um remédio baseada no peso do paciente, ele está aplicando uma proporção vital. Na engenharia, as engrenagens de um relógio ou de um motor funcionam em razões precisas para que o tempo e a força sejam transmitidos corretamente. Até na arte e na fotografia, a "proporção áurea" ou a regra dos terços são razões matemáticas que o nosso cérebro interpreta como beleza e equilíbrio visual. Dominar esses conceitos é aprender a controlar a escala do mundo ao seu redor.</p>
+            <p>Nesta lição, vamos explorar a fundo como escrever e interpretar razões usando frações. Você aprenderá a verificar se duas grandezas são proporcionais usando o famoso "produto dos meios pelos extremos" e descobrirá que a matemática das comparações é intuitiva e extremamente útil. Vamos ver exemplos que vão da velocidade média de um carro à densidade demográfica de uma cidade. Entender razão e proporção é ganhar o poder de fazer previsões exatas e tomar decisões baseadas em dados concretos, seja nas finanças pessoais ou em projetos de larga escala. Prepare-se para elevar sua capacidade de análise e descobrir a harmonia dos números!</p>
+        </section>
+
+        <section id="teoria">
+            <h2>2. Teoria e Exemplos</h2>
+            <p>Razão e proporção são as bases para o estudo das relações entre grandezas.</p>
+            
+            <h3>A. Razão</h3>
+            <p>É o quociente entre dois números \( a \) e \( b \) (\( b \neq 0 \)), representado por \( \frac{a}{b} \) ou \( a:b \). Lemos como "a está para b".</p>
+            <ul>
+                <li><strong>Exemplo:</strong> Em uma sala com 20 homens e 30 mulheres, a razão de homens para mulheres é \( \frac{20}{30} = \frac{2}{3} \).</li>
+            </ul>
+            
+            <h3>B. Proporção</h3>
+            <p>É a igualdade entre duas razões: \( \frac{a}{b} = \frac{c}{d} \).
+            <strong>Propriedade Fundamental:</strong> O produto dos extremos é igual ao produto dos meios.
+            \[ a \times d = b \times c \]</p>
+            
+            <h3>C. Razões Especiais</h3>
+            <ul>
+                <li><strong>Velocidade Média:</strong> \( \text{Distância} / \text{Tempo} \).</li>
+                <li><strong>Escala:</strong> \( \text{Medida no desenho} / \text{Medida real} \).</li>
+                <li><strong>Densidade Demográfica:</strong> \( \text{Habitantes} / \text{Área} \).</li>
+            </ul>
+        </section>
+
+        <section id="mapa-mental">
+            <h2>3. Mapa Mental</h2>
+            <div class="mm-blogger-container">
+                <div class="mm-wrapper">
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Conceito de Razão <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A razão é a ferramenta de comparação primária. Ela reduz dois números a um único valor que indica quantas vezes um está contido no outro. Essa simplificação é essencial para entender rendimentos, consumos e eficiências. Ao transformar '100 km em 2 horas' na razão '50 km/h', estamos criando uma unidade de comparação universal que nos permite avaliar o desempenho de qualquer veículo, independente da distância total percorrida.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Regra da Proporção <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A proporção estabelece o equilíbrio. Se dobramos a receita de um bolo, todas as razões entre os ingredientes devem permanecer iguais para que o resultado seja o mesmo. A regra do 'X' (multiplicação cruzada) é a prova matemática desse equilíbrio. Na prática, ela permite encontrar valores desconhecidos em situações de falta de informação, sendo a técnica base para a regra de três e para o ajuste de orçamentos e escalas industriais.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mm-center"><h3>RAZÃO E PROPORÇÃO</h3></div>
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Escalas e Mapas <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A escala é uma aplicação vital da razão na representação do espaço. Ela permite comprimir distâncias continentais em centímetros em uma tela ou papel, mantendo a precisão das direções e formas. Uma escala de 1:50 em um projeto arquitetônico significa que cada centímetro desenhado representa 50 centímetros na vida real. Sem essa razão constante, seria impossível planejar cidades ou fabricar peças mecânicas complexas que exijam encaixes perfeitos.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Densidade e Velocidade <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Razões especiais descrevem fenômenos do mundo real. A velocidade média é a razão entre espaço e tempo, fundamental para o transporte. A densidade demográfica é a razão entre população e área, essencial para o planejamento público. Essas medidas permitem que governos e empresas analisem tendências, identifiquem gargalos em rodovias ou áreas superpovoadas, transformando dados brutos em inteligência estratégica para o desenvolvimento de sociedades.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="atividades-mc">
+            <h2>4. Atividades: Múltipla Escolha</h2>
+            <div class="question" id="q1">
+                <p><span class="destaque-term">Questão 1:</span> Qual a razão simplificada de 40 para 60?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q1', 'A', 'B')">A) 4/6</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'B', 'B')">B) 2/3</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'C', 'B')">C) 1/2</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'D', 'B')">D) 20/30</button>
+                </div>
+                <div class="feedback" id="fb-q1">Simplificação: Dividindo ambos por 20, temos \( 40/20 = 2 \) e \( 60/20 = 3 \). Logo, \( 2/3 \).</div>
+            </div>
+            <div class="question" id="q2">
+                <p><span class="destaque-term">Questão 2:</span> Se \( \frac{x}{10} = \frac{3}{5} \), qual o valor de \( x \)?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q2', 'A', 'A')">A) 6</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'B', 'A')">B) 30</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'C', 'A')">C) 5</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'D', 'A')">D) 15</button>
+                </div>
+                <div class="feedback" id="fb-q2">Cálculo: Multiplicando cruzado: \( 5x = 30 \rightarrow x = 30 / 5 = 6 \).</div>
+            </div>
+            <div class="question" id="q3">
+                <p><span class="destaque-term">Questão 3:</span> Um carro percorreu 240 km em 3 horas. Qual sua velocidade média (razão)?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q3', 'A', 'D')">A) 720 km/h</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'B', 'D')">B) 60 km/h</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'C', 'D')">C) 90 km/h</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'D', 'D')">D) 80 km/h</button>
+                </div>
+                <div class="feedback" id="fb-q3">Lógica: Velocidade = Distância / Tempo. \( 240 / 3 = 80 \text{ km/h} \).</div>
+            </div>
+        </section>
+
+        <section id="atividades-vf">
+            <h2>5. Atividades: Verdadeiro ou Falso</h2>
+            <div class="question" id="vf1">
+                <p><span class="destaque-term">1.</span> Na razão \( \frac{a}{b} \), o número \( b \) pode ser zero.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'V', 'F')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'F', 'F')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf1">Falso! Jamais se pode dividir por zero na matemática.</div>
+            </div>
+            <div class="question" id="vf2">
+                <p><span class="destaque-term">2.</span> Proporção é a igualdade entre duas razões.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf2">Verdadeiro! Esse equilíbrio permite o uso da regra de três.</div>
+            </div>
+            <div class="question" id="vf3">
+                <p><span class="destaque-term">3.</span> Se dobrarmos os termos de uma razão, o valor da razão não se altera.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf3">Verdadeiro! \( \frac{1}{2} \) é o mesmo que \( \frac{2}{4} \). São razões equivalentes.</div>
+            </div>
+        </section>
+
+        <section id="flashcards">
+            <h2>6. Flashcards</h2>
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é Razão?</div><div class="flashcard-back">Comparação entre dois números via divisão.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é Proporção?</div><div class="flashcard-back">Igualdade entre duas razões.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Antecedente?</div><div class="flashcard-back">O número de cima da razão (a).</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Consequente?</div><div class="flashcard-back">O número de baixo da razão (b).</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Meios e Extremos?</div><div class="flashcard-back">Os termos que se multiplicam em 'X'.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Escala 1:100?</div><div class="flashcard-back">1 unidade no papel vale 100 na real.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Velocidade Média?</div><div class="flashcard-back">Distância / Tempo.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Simplificar Razão?</div><div class="flashcard-back">Dividir ambos os termos pelo mesmo valor.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">D. Demográfica?</div><div class="flashcard-back">Habitantes / Área.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Razão Inversa?</div><div class="flashcard-back">Inverter a fração original.</div></div></div>
+            </div>
+        </section>
+
+        <section id="dicionario">
+            <h2>7. Dicionário</h2>
+            <div class="dict-item"><span class="dict-term">Antecedente:</span> O primeiro termo de uma razão, o valor que está sendo comparado.</div>
+            <div class="dict-item"><span class="dict-term">Consequente:</span> O segundo termo de uma razão, o valor de referência da comparação.</div>
+            <div class="dict-item"><span class="dict-term">Densidade:</span> Razão entre a massa de um objeto e o seu volume ocupado.</div>
+            <div class="dict-item"><span class="dict-term">Equivalência:</span> Relação entre duas razões que possuem o mesmo valor numérico final.</div>
+            <div class="dict-item"><span class="dict-term">Escala:</span> Razão constante entre as medidas de um modelo e o objeto real.</div>
+            <div class="dict-item"><span class="dict-term">Extremos:</span> O primeiro e o último termo de uma proporção escrita em linha.</div>
+            <div class="dict-item"><span class="dict-term">Grandeza:</span> Tudo aquilo que pode ser medido, contado ou comparado numericamente.</div>
+            <div class="dict-item"><span class="dict-term">Inversamente:</span> Relação onde uma grandeza aumenta enquanto a outra diminui proporcionalmente.</div>
+            <div class="dict-item"><span class="dict-term">Meios:</span> Os dois termos centrais de uma proporção escrita em linha.</div>
+            <div class="dict-item"><span class="dict-term">Porcentagem:</span> Razão cujo consequente (denominador) é sempre o número 100.</div>
+            <div class="dict-item"><span class="dict-term">Proporção:</span> Sentença matemática que declara que duas razões são perfeitamente iguais.</div>
+            <div class="dict-item"><span class="dict-term">Quociente:</span> O resultado de uma divisão, que representa o valor de uma razão.</div>
+            <div class="dict-item"><span class="dict-term">Razão:</span> Expressão numérica da relação entre duas quantidades do mesmo tipo ou não.</div>
+            <div class="dict-item"><span class="dict-term">Simplificação:</span> Ato de reduzir os termos de uma razão sem alterar seu valor final.</div>
+            <div class="dict-item"><span class="dict-term">Taxa:</span> Razão entre duas grandezas de naturezas diferentes (ex: km e hora).</div>
+        </section>
+
+        <section id="materiais">
+            <h2>8. Materials Complementares</h2>
+            <ul>
+                <li><a href="https://pt.khanacademy.org/math/arithmetic/arith-review-ratios-percentages" target="_blank">Khan Academy: Razões e Proporções</a> - Exercícios práticos.</li>
+                <li><a href="https://www.youtube.com/watch?v=razao-e-proporcao-do-zero" target="_blank">Vídeo: Razão e Proporção sem mistérios</a> - Exemplos do dia a dia.</li>
+                <li><a href="https://www.infoescola.com/matematica/razao-e-proporcao/" target="_blank">InfoEscola: Artigo completo</a> - Teoria e história dos conceitos.</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+    // Função para múltipla escolha e V/F
+    function checkAnswer(questionId, selected, correct) {
+        let fbDiv = document.getElementById('fb-' + questionId);
+        if (!fbDiv) return;
+        if (selected === correct) {
+            fbDiv.classList.add('correct');
+            fbDiv.classList.remove('incorrect');
+        } else {
+            fbDiv.classList.add('incorrect');
+            fbDiv.classList.remove('correct');
+        }
+        fbDiv.style.display = 'block';
+        fbDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Inicialização do mapa mental (expansão dos nós)
+    (function() {
+        const nodes = document.querySelectorAll('.mm-node');
+        if (nodes.length === 0) return;
+        nodes.forEach(node => {
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isActive = this.classList.contains('active');
+                nodes.forEach(n => {
+                    n.classList.remove('active');
+                    const icon = n.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '+';
+                    n.style.zIndex = '10';
+                });
+                if (!isActive) {
+                    this.classList.add('active');
+                    this.style.zIndex = '100';
+                    const icon = this.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '-';
+                }
+            });
+        });
+        document.addEventListener('click', function() {
+            nodes.forEach(n => {
+                n.classList.remove('active');
+                const icon = n.querySelector('.mm-icon');
+                if (icon) icon.textContent = '+';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

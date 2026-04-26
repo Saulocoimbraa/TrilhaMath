@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área de Figuras: Medindo o Espaço - TrilhaMath</title>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #ED7C3A;
+            --secondary: #2f4887;
+            --dark: #1F2937;
+            --light: #F3F4F6;
+            --danger: #EF4444;
+            --bg-body: #ffffff;
+        }
+
+        /* Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-logo {
+            height: 30px;
+            mix-blend-mode: multiply;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+        .nav-btn-next {
+            background: var(--primary);
+            color: white !important;
+        }
+        .nav-btn-next:hover {
+            background: #d35400 !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(237, 124, 58, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            padding: 80px 0 0 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 0.1rem;
+            margin-bottom: 2rem;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--primary) !important;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+        }
+
+        .destaque-term {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Mapa Mental */
+        .mm-blogger-container {
+            background-color: #f1f5f9;
+            padding: 40px 10px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .mm-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .mm-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .mm-center {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border-left: 6px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .mm-node-wrapper {
+            flex: 0 1 220px;
+            position: relative;
+            min-height: 50px;
+        }
+
+        .mm-node {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .mm-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .mm-node.active {
+            position: absolute;
+            width: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .mm-node-header {
+            padding: 12px 15px;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .mm-node.active .mm-node-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mm-node-content {
+            padding: 0;
+            max-height: 0;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .mm-node.active .mm-node-content {
+            padding: 15px;
+            max-height: 400px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .mm-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        /* Quiz & VF */
+        .question {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        button.option-btn,
+        button.vf-btn {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        button.option-btn:hover,
+        button.vf-btn:hover {
+            border-color: var(--primary);
+            background: #fffaf0;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #D1FAE5;
+            color: #065F46;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #FEE2E2;
+            color: #991B1B;
+            display: block;
+        }
+
+        /* Flashcards */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .flashcard {
+            background: transparent;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flip .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background-color: white;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            font-weight: bold;
+        }
+
+        .flashcard-back {
+            background-color: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Dictionary */
+        .dict-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+
+        .dict-term {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .img-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d1d5db;
+        }
+
+        .img-placeholder {
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .mm-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .mm-node.active {
+                width: 100%;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="../../index.html" class="nav-link">Início</a>
+        </div>
+        <img src="../../assets/logo-horizontal.png" alt="TrilhaMath" class="nav-logo">
+        <div class="nav-right">
+            <a href="teorema_de_pitágoras.html" class="nav-link nav-btn-next">Avançar</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Área de Figuras: Medindo o Espaço</h1>
+            <p>Descubra como calcular o tamanho das superfícies e aprenda a dominar o espaço bidimensional para aplicações que vão da decoração à engenharia.</p>
+        </header>
+
+        <section id="introducao">
+            <h2>1. Introdução e Contexto</h2>
+            <div class="img-container">
+                <p class="img-placeholder">[Sugestão de Imagem: Uma visão aérea de um terreno sendo loteado em diferentes formas geométricas (retângulos, trapézios), com sobreposições de fórmulas e uma trena digital medindo o piso de uma sala moderna.]</p>
+                <span class="img-caption">A área é a medida de quanta 'superfície' uma forma ocupa no plano.</span>
+            </div>
+            <p>Você já se perguntou quanta tinta precisa comprar para pintar o seu quarto sem que falte ou sobre galões caros? Ou como um agricultor sabe exatamente quantas sementes plantar em um campo para aproveitar cada centímetro de terra? Para responder a essas perguntas, precisamos dominar o conceito de <span class="destaque-term">Área</span>. Diferente do perímetro, que mede apenas a "fronteira" ou o contorno de uma figura, a área mede o preenchimento, o espaço interno total. É a diferença entre saber o comprimento da cerca de um terreno e saber quanto gramado você pode plantar dentro dele. Medir áreas é transformar formas geométricas em números práticos que governam o comércio e a construção.</p>
+            <p>No nosso dia a dia, a área está presente em quase tudo. Quando você compra um smartphone, a "tela de 6 polegadas" é uma medida de área; quando um arquiteto projeta um shopping, ele precisa calcular a área de circulação para garantir o conforto de milhares de pessoas; e até na tecnologia de chips de computador, os engenheiros lutam para diminuir a área ocupada pelos transistores para que o seu celular seja mais rápido e consuma menos bateria. Na economia, o valor de imóveis é definido pelo preço do "metro quadrado" (\( m^2 \)), tornando o cálculo de área uma das habilidades matemáticas mais valiosas para quem quer gerenciar bem suas finanças e propriedades.</p>
+            <p>Nesta lição, vamos aprender as fórmulas fundamentais para calcular a área das figuras mais comuns: o Quadrado, o Retângulo, o Triângulo e o Trapézio. Vamos entender a lógica por trás de cada fórmula e por que todas elas são, no fundo, variações do preenchimento de uma base por uma altura. Você descobrirá que um triângulo é sempre a metade de um retângulo, e que o trapézio é apenas um retângulo com bases diferentes. Dominar o cálculo de áreas é ganhar o poder de planejar o mundo material com precisão e eficiência, economizando recursos e otimizando cada espaço que você utiliza. Prepare-se para cobrir todo o conteúdo e se tornar um mestre das superfícies!</p>
+        </section>
+
+        <section id="teoria">
+            <h2>2. Teoria e Exemplos</h2>
+            <p>A área de uma figura plana é a medida da sua superfície interna. A unidade padrão do Sistema Internacional é o <strong>metro quadrado (\( m^2 \))</strong>.</p>
+            
+            <h3>A. Retângulo e Quadrado</h3>
+            <p>A área é obtida multiplicando-se a base pela altura.</p>
+            <ul>
+                <li><strong>Retângulo:</strong> \( A = b \times h \)</li>
+                <li><strong>Quadrado:</strong> \( A = L^2 \) (Lado vezes Lado)</li>
+            </ul>
+            
+            <h3>B. Triângulo</h3>
+            <p>Um triângulo ocupa exatamente a metade da área de um retângulo com a mesma base e altura.</p>
+            <ul>
+                <li><strong>Triângulo:</strong> \( A = \frac{b \times h}{2} \)</li>
+            </ul>
+            
+            <h3>C. Trapézio</h3>
+            <p>É a média das bases multiplicada pela altura.</p>
+            <ul>
+                <li><strong>Trapézio:</strong> \( A = \frac{(B + b) \times h}{2} \)</li>
+            </ul>
+            <p><em>Onde: B = Base Maior; b = Base Menor; h = Altura.</em></p>
+        </section>
+
+        <section id="mapa-mental">
+            <h2>3. Mapa Mental</h2>
+            <div class="mm-blogger-container">
+                <div class="mm-wrapper">
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Base x Altura <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">O conceito de 'base vezes altura' é o núcleo de quase todos os cálculos de área. Ele representa a varredura de um comprimento ao longo de uma direção perpendicular, preenchendo o espaço bidimensional. No retângulo e no quadrado, essa varredura é direta. Entender essa lógica fundamental permite que você deduza fórmulas complexas apenas visualizando como a forma preenche o plano, facilitando a memorização e a aplicação em situações práticas de medição de terrenos e pisos.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Triângulo: A Metade <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">O triângulo é geometricamente definido como a metade de um quadrilátero (retângulo ou paralelogramo) que possui a mesma base e a mesma altura. Por isso, dividimos o produto 'base x altura' por dois. Essa relação de metade é um dos pilares da trigonometria e da engenharia, permitindo o cálculo de áreas de telhados, velas de barcos e estruturas de suporte triangulares, garantindo que o material utilizado seja proporcional ao espaço que se deseja cobrir ou sustentar.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mm-center"><h3>ÁREA DE FIGURAS</h3></div>
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Trapézio e Média <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A fórmula do trapézio utiliza a média aritmética das bases para compensar a inclinação de seus lados. Somamos a base maior com a base menor e dividimos por dois para encontrar uma 'base média' equivalente a um retângulo de mesma área. Esse raciocínio é muito útil em projetos de engenharia civil, como o cálculo de volume de barragens, aterros e encostas, onde as formas raramente são retângulos perfeitos e exigem essa compensação de larguras para um resultado exato.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Aplicações Reais <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Calcular áreas é a base da economia do espaço. Na agronomia, define a quantidade de fertilizante; na moda, a quantidade de tecido para um molde; na publicidade, o preço de um outdoor; e na biologia, a área de superfície de absorção de um pulmão ou intestino. Dominar o cálculo de áreas permite ao indivíduo ser um consumidor consciente (comprando apenas o necessário) e um profissional eficiente, capaz de otimizar custos e recursos em qualquer projeto que envolva superfícies físicas.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="atividades-mc">
+            <h2>4. Atividades: Múltipla Escolha</h2>
+            <div class="question" id="q1">
+                <p><span class="destaque-term">Questão 1:</span> Qual a área de um quadrado cujo lado mede 5 metros?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q1', 'A', 'B')">A) \( 20 m^2 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'B', 'B')">B) \( 25 m^2 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'C', 'B')">C) \( 10 m^2 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'D', 'B')">D) \( 50 m^2 \)</button>
+                </div>
+                <div class="feedback" id="fb-q1">Cálculo: Área do quadrado = Lado x Lado. \( 5 \times 5 = 25 m^2 \).</div>
+            </div>
+            <div class="question" id="q2">
+                <p><span class="destaque-term">Questão 2:</span> Um retângulo tem base de 10 cm e altura de 4 cm. Qual a sua área?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q2', 'A', 'C')">A) \( 14 cm^2 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'B', 'C')">B) \( 20 cm^2 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'C', 'C')">C) \( 40 cm^2 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'D', 'C')">D) \( 80 cm^2 \)</button>
+                </div>
+                <div class="feedback" id="fb-q2">Cálculo: Área do retângulo = Base x Altura. \( 10 \times 4 = 40 cm^2 \).</div>
+            </div>
+            <div class="question" id="q3">
+                <p><span class="destaque-term">Questão 3:</span> Se um triângulo tem base de 6 cm e altura de 10 cm, sua área será de:</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q3', 'A', 'A')">A) \( 30 cm^2 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'B', 'A')">B) \( 60 cm^2 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'C', 'A')">C) \( 15 cm^2 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'D', 'A')">D) \( 12 cm^2 \)</button>
+                </div>
+                <div class="feedback" id="fb-q3">Cálculo: Área do triângulo = (Base x Altura) / 2. \( (6 \times 10) / 2 = 60 / 2 = 30 cm^2 \).</div>
+            </div>
+        </section>
+
+        <section id="atividades-vf">
+            <h2>5. Atividades: Verdadeiro ou Falso</h2>
+            <div class="question" id="vf1">
+                <p><span class="destaque-term">1.</span> O perímetro e a área de uma figura são nomes diferentes para a mesma medida.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'V', 'F')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'F', 'F')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf1">Falso! Perímetro mede o contorno (comprimento) e área mede a superfície (espaço interno).</div>
+            </div>
+            <div class="question" id="vf2">
+                <p><span class="destaque-term">2.</span> Para calcular a área de um trapézio, precisamos conhecer as medidas das suas duas bases e da sua altura.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf2">Verdadeiro! A fórmula exige a Base Maior (B), a Base Menor (b) e a Altura (h).</div>
+            </div>
+            <div class="question" id="vf3">
+                <p><span class="destaque-term">3.</span> A unidade de medida de área deve ser sempre elevada ao quadrado (ex: \( m^2, cm^2 \)).</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf3">Verdadeiro! Isso indica que estamos medindo duas dimensões (comprimento x largura) simultaneamente.</div>
+            </div>
+        </section>
+
+        <section id="flashcards">
+            <h2>6. Flashcards</h2>
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Área do Quadrado?</div><div class="flashcard-back">Lado² (L x L).</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Área do Retângulo?</div><div class="flashcard-back">Base x Altura (b x h).</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Área do Triângulo?</div><div class="flashcard-back">(Base x Altura) / 2.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Área do Trapézio?</div><div class="flashcard-back">((B + b) x h) / 2.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Unidade de Área?</div><div class="flashcard-back">m², cm², km², etc.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Base?</div><div class="flashcard-back">A parte de baixo (apoio) da figura.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Altura (h)?</div><div class="flashcard-back">Distância perpendicular da base ao topo.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Superfície?</div><div class="flashcard-back">A face externa ou interna de uma forma.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Perímetro?</div><div class="flashcard-back">Soma dos lados (contorno).</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Metro Quadrado?</div><div class="flashcard-back">Área de um quadrado de 1m de lado.</div></div></div>
+            </div>
+        </section>
+
+        <section id="dicionario">
+            <h2>7. Dicionário</h2>
+            <div class="dict-item"><span class="dict-term">Altura:</span> A distância vertical e reta que separa a base do ponto mais alto da figura.</div>
+            <div class="dict-item"><span class="dict-term">Área:</span> Medida da superfície interna de uma figura, expressa em unidades quadradas.</div>
+            <div class="dict-item"><span class="dict-term">Base:</span> Lado sobre o qual a figura se apoia ou referência para o cálculo de altura.</div>
+            <div class="dict-item"><span class="dict-term">Bidimensional:</span> Que possui duas dimensões: comprimento e largura (como o plano).</div>
+            <div class="dict-item"><span class="dict-term">Dimensão:</span> Cada uma das direções em que podemos medir um objeto ou espaço.</div>
+            <div class="dict-item"><span class="dict-term">Hectare:</span> Unidade de área agrária equivalente a 10.000 metros quadrados.</div>
+            <div class="dict-item"><span class="dict-term">Horizontal:</span> Direção paralela à linha do horizonte, geralmente a direção da base.</div>
+            <div class="dict-item"><span class="dict-term">Ladrilhamento:</span> Cobrir uma área com formas menores repetidas sem deixar espaços vazios.</div>
+            <div class="dict-item"><span class="dict-term">Metro Quadrado:</span> Unidade padrão de área que representa um espaço de 1m por 1m.</div>
+            <div class="dict-item"><span class="dict-term">Perímetro:</span> O comprimento total da linha que fecha uma figura geométrica.</div>
+            <div class="dict-item"><span class="dict-term">Perpendicular:</span> Relação de 90° entre a base e a altura, essencial para o cálculo correto.</div>
+            <div class="dict-item"><span class="dict-term">Plano:</span> Superfície lisa onde desenhamos as figuras para calcular suas áreas.</div>
+            <div class="dict-item"><span class="dict-term">Superfície:</span> A extensão externa de um corpo ou a face interna de um polígono.</div>
+            <div class="dict-item"><span class="dict-term">Trapézio:</span> Quadrilátero com apenas dois lados paralelos, chamados de bases.</div>
+            <div class="dict-item"><span class="dict-term">Triângulo:</span> Polígono de 3 lados cuja área é sempre metade de um quadrilátero.</div>
+        </section>
+
+        <section id="materiais">
+            <h2>8. Materials Complementares</h2>
+            <ul>
+                <li><a href="https://pt.khanacademy.org/math/geometry/hs-geo-foundations/hs-geo-area" target="_blank">Khan Academy: Área e Perímetro</a> - Curso fundamental.</li>
+                <li><a href="https://www.youtube.com/watch?v=calculo-de-area-rapido" target="_blank">Vídeo: Como calcular áreas de cabeça</a> - Macetes e dicas práticas.</li>
+                <li><a href="https://www.mathopenref.com/area.html" target="_blank">MathOpenRef: Area Calculator</a> - Ferramenta interativa de cálculo de áreas (em inglês).</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+    // Função para múltipla escolha e V/F
+    function checkAnswer(questionId, selected, correct) {
+        let fbDiv = document.getElementById('fb-' + questionId);
+        if (!fbDiv) return;
+        if (selected === correct) {
+            fbDiv.classList.add('correct');
+            fbDiv.classList.remove('incorrect');
+        } else {
+            fbDiv.classList.add('incorrect');
+            fbDiv.classList.remove('correct');
+        }
+        fbDiv.style.display = 'block';
+        fbDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Inicialização do mapa mental (expansão dos nós)
+    (function() {
+        const nodes = document.querySelectorAll('.mm-node');
+        if (nodes.length === 0) return;
+        nodes.forEach(node => {
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isActive = this.classList.contains('active');
+                nodes.forEach(n => {
+                    n.classList.remove('active');
+                    const icon = n.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '+';
+                    n.style.zIndex = '10';
+                });
+                if (!isActive) {
+                    this.classList.add('active');
+                    this.style.zIndex = '100';
+                    const icon = this.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '-';
+                }
+            });
+        });
+        document.addEventListener('click', function() {
+            nodes.forEach(n => {
+                n.classList.remove('active');
+                const icon = n.querySelector('.mm-icon');
+                if (icon) icon.textContent = '+';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

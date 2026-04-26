@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regra de Três Simples: A Ferramenta do Dia a Dia - TrilhaMath</title>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #ED7C3A;
+            --secondary: #2f4887;
+            --dark: #1F2937;
+            --light: #F3F4F6;
+            --danger: #EF4444;
+            --bg-body: #ffffff;
+        }
+
+        /* Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-logo {
+            height: 30px;
+            mix-blend-mode: multiply;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+        .nav-btn-next {
+            background: var(--primary);
+            color: white !important;
+        }
+        .nav-btn-next:hover {
+            background: #d35400 !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(237, 124, 58, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            padding: 80px 0 0 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 0.1rem;
+            margin-bottom: 2rem;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--primary) !important;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+        }
+
+        .destaque-term {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Mapa Mental */
+        .mm-blogger-container {
+            background-color: #f1f5f9;
+            padding: 40px 10px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .mm-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .mm-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .mm-center {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border-left: 6px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .mm-node-wrapper {
+            flex: 0 1 220px;
+            position: relative;
+            min-height: 50px;
+        }
+
+        .mm-node {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .mm-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .mm-node.active {
+            position: absolute;
+            width: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .mm-node-header {
+            padding: 12px 15px;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .mm-node.active .mm-node-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mm-node-content {
+            padding: 0;
+            max-height: 0;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .mm-node.active .mm-node-content {
+            padding: 15px;
+            max-height: 400px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .mm-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        /* Quiz & VF */
+        .question {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        button.option-btn,
+        button.vf-btn {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        button.option-btn:hover,
+        button.vf-btn:hover {
+            border-color: var(--primary);
+            background: #fffaf0;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #D1FAE5;
+            color: #065F46;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #FEE2E2;
+            color: #991B1B;
+            display: block;
+        }
+
+        /* Flashcards */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .flashcard {
+            background: transparent;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flip .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background-color: white;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            font-weight: bold;
+        }
+
+        .flashcard-back {
+            background-color: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Dictionary */
+        .dict-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+
+        .dict-term {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .img-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d1d5db;
+        }
+
+        .img-placeholder {
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .mm-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .mm-node.active {
+                width: 100%;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="../../index.html" class="nav-link">Início</a>
+        </div>
+        <img src="../../assets/logo-horizontal.png" alt="TrilhaMath" class="nav-logo">
+        <div class="nav-right">
+            <a href="regra_de_três_composta.html" class="nav-link nav-btn-next">Avançar</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Regra de Três Simples: A Ferramenta do Dia a Dia</h1>
+            <p>Aprenda a técnica mais prática da matemática e descubra como encontrar valores desconhecidos usando apenas a lógica das proporções equilibradas.</p>
+        </header>
+
+        <section id="introducao">
+            <h2>1. Introdução e Contexto</h2>
+            <div class="img-container">
+                <p class="img-placeholder">[Sugestão de Imagem: Um estudante em um supermercado comparando o preço de duas embalagens de tamanhos diferentes, com um balão de pensamento mostrando a estrutura clássica da regra de três sendo montada.]</p>
+                <span class="img-caption">Se você conhece três valores, o quarto valor está a apenas um cálculo de distância.</span>
+            </div>
+            <p>Você já esteve no supermercado e ficou em dúvida sobre qual embalagem de detergente valia mais a pena? A de 500ml por R$ 3,00 ou a de 2 litros por R$ 10,00? Ou talvez você estivesse preparando um refresco e precisasse saber quanto de açúcar colocar para 3 litros, sabendo que a receita original pede 2 colheres para cada 500ml. Para resolver esses "dilemas" práticos, usamos a técnica matemática mais popular do mundo: a <span class="destaque-term">Regra de Três Simples</span>. Ela é o canivete suíço do raciocínio lógico, permitindo-nos descobrir um valor que não conhecemos a partir de três que já temos, desde que eles mantenham uma relação de proporcionalidade entre si. É a matemática da vida real em sua forma mais pura.</p>
+            <p>No ambiente profissional, a regra de três é indispensável. Um enfermeiro a utiliza para converter a miligramagem de um frasco de remédio na quantidade exata de mililitros para aplicar em um paciente; um arquiteto a usa para transpor as medidas de um projeto para a escala real do canteiro de obras; e um analista de marketing a utiliza para prever quantos cliques um anúncio terá com um orçamento maior, baseando-se nos resultados passados. Ela é a base da previsibilidade: se sabemos como o sistema se comporta em uma escala pequena, a regra de três nos diz como ele se comportará em qualquer outra escala. Sem ela, estaríamos apenas "chutando" valores e correndo riscos desnecessários em nossas finanças e projetos.</p>
+            <p>Nesta lição, vamos aprender o passo a passo para montar e resolver problemas de regra de três, tanto para grandezas que crescem juntas (diretas) quanto para aquelas que se opõem (inversas). Você aprenderá a técnica das "setinhas", que ajuda a organizar o pensamento e evitar erros comuns de inversão. Vamos exercitar situações que vão da economia de combustível em uma viagem até o cálculo de tempo de download de um arquivo. Dominar a regra de três é ganhar autonomia para resolver quase qualquer problema proporcional que a vida te apresentar, economizando tempo, dinheiro e neurônios. Prepare-se para se tornar um estrategista das proporções!</p>
+        </section>
+
+        <section id="teoria">
+            <h2>2. Teoria e Exemplos</h2>
+            <p>A Regra de Três Simples é o processo para encontrar o quarto termo de uma proporção conhecendo os outros três.</p>
+            
+            <h3>A. Passos para Resolução</h3>
+            <ol>
+                <li><strong>Montar a tabela:</strong> Agrupe as grandezas da mesma espécie em colunas.</li>
+                <li><strong>Identificar a relação:</strong> Verifique se são Diretas (GDP) ou Inversas (GIP).</li>
+                <li><strong>Montar a proporção:</strong> Se for GIP, inverta os termos de uma das colunas.</li>
+                <li><strong>Resolver:</strong> Multiplique cruzado e isole a incógnita (x).</li>
+            </ol>
+            
+            <h3>B. Exemplo Direto (GDP)</h3>
+            <p><em>"Se 3 kg de carne custam R$ 90, quanto custarão 5 kg?"</em></p>
+            <ul>
+                <li>Kg: 3 → 5</li>
+                <li>R$: 90 → x</li>
+                <li>\( 3x = 450 \rightarrow x = 150 \). Resposta: R$ 150,00.</li>
+            </ul>
+            
+            <h3>C. Exemplo Inverso (GIP)</h3>
+            <p><em>"Se 2 operários fazem uma obra em 6 dias, 4 operários farão em quantos dias?"</em></p>
+            <ul>
+                <li>Op: 2 → 4 (Inverte para 4 → 2)</li>
+                <li>Dias: 6 → x</li>
+                <li>\( 4x = 12 \rightarrow x = 3 \). Resposta: 3 dias.</li>
+            </ul>
+        </section>
+
+        <section id="mapa-mental">
+            <h2>3. Mapa Mental</h2>
+            <div class="mm-blogger-container">
+                <div class="mm-wrapper">
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Montagem da Tabela <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">O primeiro passo crítico é o alinhamento. Grandezas da mesma natureza (ex: dinheiro com dinheiro, tempo com tempo) devem ficar estritamente na mesma coluna. Uma tabela bem montada é 50% da solução do problema, pois ela visualiza a estrutura da proporção e evita que você misture unidades de medida diferentes, o que levaria a um resultado sem sentido matemático ou prático.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Análise das Setas <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">As setas indicam o sentido do crescimento das grandezas. Se ao aumentar uma, a outra também aumenta, as setas apontam para o mesmo lado (Direta). Se o aumento de uma causa a redução da outra, as setas são opostas (Inversa). Essa análise qualitativa protege o raciocínio contra erros mecânicos, forçando o estudante a entender a lógica do fenômeno antes de partir para a execução dos cálculos numéricos.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mm-center"><h3>REGRA DE TRÊS SIMPLES</h3></div>
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Multiplicação em 'X' <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A multiplicação cruzada é a aplicação da Propriedade Fundamental das Proporções. Ela transforma a igualdade de frações em uma equação linear simples. Para problemas diretos, multiplicamos o termo acima do X pelo termo ao lado e dividimos pelo que restou. É um algoritmo mental poderoso que simplifica a álgebra, permitindo resoluções rápidas de cabeça para problemas cotidianos de compras e dosagens.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Aplicações Práticas <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A regra de três governa as conversões de unidades (ex: metros para quilômetros), os cálculos de porcentagem, as escalas de mapas e a farmacologia. Ela é a linguagem da economia doméstica e da produção industrial. Dominar essa técnica permite que você ajuste receitas, calcule rendimentos de combustível e compare ofertas de forma científica, tornando-se imune a armadilhas de marketing que escondem o verdadeiro valor dos produtos.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="atividades-mc">
+            <h2>4. Atividades: Múltipla Escolha</h2>
+            <div class="question" id="q1">
+                <p><span class="destaque-term">Questão 1:</span> Se uma impressora imprime 50 páginas em 5 minutos, quantas páginas ela imprimirá em 15 minutos?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q1', 'A', 'B')">A) 100 páginas</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'B', 'B')">B) 150 páginas</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'C', 'B')">C) 75 páginas</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'D', 'B')">D) 250 páginas</button>
+                </div>
+                <div class="feedback" id="fb-q1">Cálculo: Triplicamos o tempo (5 para 15), logo triplicamos as páginas. \( 50 \times 3 = 150 \).</div>
+            </div>
+            <div class="question" id="q2">
+                <p><span class="destaque-term">Questão 2:</span> Um carro consome 10 litros de gasolina para percorrer 120 km. Quantos litros serão necessários para percorrer 60 km?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q2', 'A', 'C')">A) 20 litros</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'B', 'C')">B) 15 litros</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'C', 'C')">C) 5 litros</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'D', 'C')">D) 2 litros</button>
+                </div>
+                <div class="feedback" id="fb-q2">Cálculo: A distância caiu pela metade (120 para 60), logo o consumo cai pela metade. \( 10 / 2 = 5 \).</div>
+            </div>
+            <div class="question" id="q3">
+                <p><span class="destaque-term">Questão 3:</span> 4 torneiras enchem um tanque em 10 horas. Se tivéssemos 8 torneiras, o tanque estaria cheio em:</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q3', 'A', 'A')">A) 5 horas</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'B', 'A')">B) 20 horas</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'C', 'A')">C) 2,5 horas</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'D', 'A')">D) 8 horas</button>
+                </div>
+                <div class="feedback" id="fb-q3">Lógica Inversa: Mais torneiras = menos tempo. Dobramos as torneiras, o tempo cai pela metade. \( 10 / 2 = 5 \).</div>
+            </div>
+        </section>
+
+        <section id="atividades-vf">
+            <h2>5. Atividades: Verdadeiro ou Falso</h2>
+            <div class="question" id="vf1">
+                <p><span class="destaque-term">1.</span> Na regra de três simples, trabalhamos sempre com exatamente três grandezas diferentes.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'V', 'F')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'F', 'F')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf1">Falso! Trabalhamos com 2 grandezas, mas conhecemos 3 valores e buscamos o 4º.</div>
+            </div>
+            <div class="question" id="vf2">
+                <p><span class="destaque-term">2.</span> Ao resolver uma regra de três inversa, devemos inverter a posição de uma das colunas antes de multiplicar cruzado.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf2">Verdadeiro! Isso transforma a relação inversa em uma conta direta equivalente.</div>
+            </div>
+            <div class="question" id="vf3">
+                <p><span class="destaque-term">3.</span> A incógnita (x) é o nome dado ao valor desconhecido que queremos encontrar.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf3">Verdadeiro! É a letra que representa o nosso objetivo final no problema.</div>
+            </div>
+        </section>
+
+        <section id="flashcards">
+            <h2>6. Flashcards</h2>
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Regra de Três?</div><div class="flashcard-back">Técnica para achar um 4º valor proporcional.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">GDP (Regra)?</div><div class="flashcard-back">Multiplica cruzado direto.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">GIP (Regra)?</div><div class="flashcard-back">Inverte uma coluna antes de multiplicar.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Incógnita?</div><div class="flashcard-back">O valor 'x' desconhecido.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Alinhamento?</div><div class="flashcard-back">Grandezas iguais na mesma coluna.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Setas iguais?</div><div class="flashcard-back">Indica Proporção Direta.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Setas opostas?</div><div class="flashcard-back">Indica Proporção Inversa.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Conversão?</div><div class="flashcard-back">Uso da regra de três para mudar unidades (ex: m p/ cm).</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Proporção?</div><div class="flashcard-back">Igualdade entre razões.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Regra de Ouro?</div><div class="flashcard-back">Sempre analisar o sentido antes de calcular.</div></div></div>
+            </div>
+        </section>
+
+        <section id="dicionario">
+            <h2>7. Dicionário</h2>
+            <div class="dict-item"><span class="dict-term">Alinhamento:</span> Organização correta dos dados em colunas de mesma espécie.</div>
+            <div class="dict-item"><span class="dict-term">Cálculo:</span> Conjunto de operações matemáticas realizadas para chegar a um resultado.</div>
+            <div class="dict-item"><span class="dict-term">Coluna:</span> Disposição vertical de dados em uma tabela de regra de três.</div>
+            <div class="dict-item"><span class="dict-term">Conversão:</span> Processo de transformar uma medida em outra unidade equivalente.</div>
+            <div class="dict-item"><span class="dict-term">Direta:</span> Relação onde ambas as grandezas aumentam ou diminuem juntas.</div>
+            <div class="dict-item"><span class="dict-term">Extremos:</span> Os termos que ficam nas pontas externas da proporção.</div>
+            <div class="dict-item"><span class="dict-term">Incógnita:</span> O valor desconhecido, geralmente representado por 'x'.</div>
+            <div class="dict-item"><span class="dict-term">Inversa:</span> Relação onde o aumento de uma grandeza gera a diminuição da outra.</div>
+            <div class="dict-item"><span class="dict-term">Isolamento:</span> Deixar a incógnita sozinha de um lado da igualdade para achar seu valor.</div>
+            <div class="dict-item"><span class="dict-term">Meios:</span> Os termos que ficam no centro da proporção matemática.</div>
+            <div class="dict-item"><span class="dict-term">Montagem:</span> O ato de estruturar o problema antes de realizar as operações.</div>
+            <div class="dict-item"><span class="dict-term">Multiplicação Cruzada:</span> Técnica de multiplicar o numerador de uma fração pelo denominador da outra.</div>
+            <div class="dict-item"><span class="dict-term">Proporcionalidade:</span> A regra de equilíbrio constante entre variações de grandezas.</div>
+            <div class="dict-item"><span class="dict-term">Razão:</span> Divisão usada para comparar dois valores de mesma espécie ou não.</div>
+            <div class="dict-item"><span class="dict-term">Regra de Três:</span> Algoritmo matemático para resolução de problemas de proporção simples.</div>
+        </section>
+
+        <section id="materiais">
+            <h2>8. Materials Complementares</h2>
+            <ul>
+                <li><a href="https://pt.khanacademy.org/math/arithmetic/arith-review-ratios-percentages/arith-review-unit-rates/v/finding-unit-rates" target="_blank">Khan Academy: Proporções e Taxas</a> - Vídeos explicativos.</li>
+                <li><a href="https://www.youtube.com/watch?v=regra-de-tres-simples-passo-a-passo" target="_blank">Vídeo: Regra de Três Simples Definitiva</a> - Com macetes para provas.</li>
+                <li><a href="https://brasilescola.uol.com.br/matematica/regra-tres-simples.htm" target="_blank">Brasil Escola: Guia Completo</a> - Teoria e muitos exercícios resolvidos.</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+    // Função para múltipla escolha e V/F
+    function checkAnswer(questionId, selected, correct) {
+        let fbDiv = document.getElementById('fb-' + questionId);
+        if (!fbDiv) return;
+        if (selected === correct) {
+            fbDiv.classList.add('correct');
+            fbDiv.classList.remove('incorrect');
+        } else {
+            fbDiv.classList.add('incorrect');
+            fbDiv.classList.remove('correct');
+        }
+        fbDiv.style.display = 'block';
+        fbDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Inicialização do mapa mental (expansão dos nós)
+    (function() {
+        const nodes = document.querySelectorAll('.mm-node');
+        if (nodes.length === 0) return;
+        nodes.forEach(node => {
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isActive = this.classList.contains('active');
+                nodes.forEach(n => {
+                    n.classList.remove('active');
+                    const icon = n.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '+';
+                    n.style.zIndex = '10';
+                });
+                if (!isActive) {
+                    this.classList.add('active');
+                    this.style.zIndex = '100';
+                    const icon = this.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '-';
+                }
+            });
+        });
+        document.addEventListener('click', function() {
+            nodes.forEach(n => {
+                n.classList.remove('active');
+                const icon = n.querySelector('.mm-icon');
+                if (icon) icon.textContent = '+';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

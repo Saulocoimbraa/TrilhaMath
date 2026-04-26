@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expressões Algébricas: A Linguagem das Letras - TrilhaMath</title>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #ED7C3A;
+            --secondary: #2f4887;
+            --dark: #1F2937;
+            --light: #F3F4F6;
+            --danger: #EF4444;
+            --bg-body: #ffffff;
+        }
+
+        /* Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-logo {
+            height: 30px;
+            mix-blend-mode: multiply;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+        .nav-btn-next {
+            background: var(--primary);
+            color: white !important;
+        }
+        .nav-btn-next:hover {
+            background: #d35400 !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(237, 124, 58, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            padding: 80px 0 0 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 0.1rem;
+            margin-bottom: 2rem;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--primary) !important;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+        }
+
+        .destaque-term {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Mapa Mental */
+        .mm-blogger-container {
+            background-color: #f1f5f9;
+            padding: 40px 10px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .mm-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .mm-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .mm-center {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border-left: 6px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .mm-node-wrapper {
+            flex: 0 1 220px;
+            position: relative;
+            min-height: 50px;
+        }
+
+        .mm-node {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .mm-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .mm-node.active {
+            position: absolute;
+            width: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .mm-node-header {
+            padding: 12px 15px;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .mm-node.active .mm-node-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mm-node-content {
+            padding: 0;
+            max-height: 0;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .mm-node.active .mm-node-content {
+            padding: 15px;
+            max-height: 400px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .mm-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        /* Quiz & VF */
+        .question {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        button.option-btn,
+        button.vf-btn {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        button.option-btn:hover,
+        button.vf-btn:hover {
+            border-color: var(--primary);
+            background: #fffaf0;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #D1FAE5;
+            color: #065F46;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #FEE2E2;
+            color: #991B1B;
+            display: block;
+        }
+
+        /* Flashcards */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .flashcard {
+            background: transparent;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flip .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background-color: white;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            font-weight: bold;
+        }
+
+        .flashcard-back {
+            background-color: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Dictionary */
+        .dict-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+
+        .dict-term {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .img-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d1d5db;
+        }
+
+        .img-placeholder {
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .mm-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .mm-node.active {
+                width: 100%;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="../../index.html" class="nav-link">Início</a>
+        </div>
+        <img src="../../assets/logo-horizontal.png" alt="TrilhaMath" class="nav-logo">
+        <div class="nav-right">
+            <a href="equações_1_grau.html" class="nav-link nav-btn-next">Avançar</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Expressões Algébricas: A Linguagem das Letras</h1>
+            <p>Descubra como a matemática deixa de lidar apenas com números para criar fórmulas universais que resolvem qualquer problema.</p>
+        </header>
+
+        <section id="introducao">
+            <h2>1. Introdução e Contexto</h2>
+            <div class="img-container">
+                <p class="img-placeholder">[Sugestão de Imagem: Uma mão escrevendo a fórmula 'f(x) = ax + b' em uma lousa de vidro, com ícones ao redor representando códigos de computador, engrenagens e gráficos financeiros.]</p>
+                <span class="img-caption">As letras na matemática são ferramentas para representar o desconhecido e o infinito.</span>
+            </div>
+            <p>Até agora, você lidou com a matemática do "aqui e agora": \( 2 + 3 = 5 \). Mas e se eu te perguntasse como calcular o preço de qualquer corrida de aplicativo, sabendo que existe um valor fixo e um valor por quilômetro? Ou como os programadores criam jogos onde o dano do personagem muda conforme o seu nível? Para responder a essas perguntas, precisamos de algo mais poderoso que apenas números: as <span class="destaque-term">Expressões Algébricas</span>. Elas são a verdadeira linguagem secreta da tecnologia e da ciência. Quando trocamos um número por uma letra (como o famoso 'x'), estamos criando uma regra universal, um molde que serve para infinitas situações diferentes.</p>
+            <p>Imagine que você trabalha no marketing de uma empresa e precisa criar uma promoção de "Leve 3, Pague 2". Como você explicaria isso para o sistema do caixa? Através de uma expressão algébrica! Se o preço de um item é 'p', a expressão ajuda o computador a saber exatamente quanto cobrar, não importa se o produto custa R$ 10 ou R$ 1000. Na engenharia, as expressões algébricas permitem calcular a resistência de pontes antes mesmo delas serem construídas, simulando diferentes pesos e materiais apenas mudando os valores das letras. É a matemática saindo do papel e se tornando uma ferramenta de criação e previsão.</p>
+            <p>Nesta lição, vamos desvendar o mistério das letras. Você aprenderá que o 'x' não é um inimigo, mas sim um espaço em branco esperando para ser preenchido. Vamos entender a anatomia de uma expressão: o que são variáveis, coeficientes e termos constantes. Vamos praticar a tradução do português para o "algebrês", transformando frases como "o dobro de um número mais cinco" em códigos matemáticos elegantes. Dominar as expressões algébricas é como aprender a gramática de um novo idioma: uma vez que você entende as regras, o mundo da programação, da física e da economia se abre para você de forma clara e fascinante. Prepare-se para pensar de forma abstrata e se tornar um arquiteto de fórmulas!</p>
+        </section>
+
+        <section id="teoria">
+            <h2>2. Teoria e Exemplos</h2>
+            <p>Uma expressão algébrica é uma combinação de números, letras e operações matemáticas.</p>
+            
+            <h3>A. Os Componentes</h3>
+            <ul>
+                <li><strong>Variável ou Incógnita:</strong> A letra que representa um valor desconhecido ou que pode mudar (ex: \( x, y, a \)).</li>
+                <li><strong>Coeficiente:</strong> O número que multiplica a letra (ex: em \( 3x \), o 3 é o coeficiente).</li>
+                <li><strong>Termo Independente:</strong> O número que aparece sozinho, sem letra (ex: em \( 2x + 5 \), o 5 é o termo independente).</li>
+            </ul>
+            
+            <h3>B. Valor Numérico</h3>
+            <p>Para achar o valor numérico, basta substituir as letras pelos números dados.
+            <strong>Exemplo:</strong> Calcule \( 2x + 10 \) para \( x = 5 \).
+            \[ 2(5) + 10 = 10 + 10 = 20 \]</p>
+            
+            <h3>C. Redução de Termos Semelhantes</h3>
+            <p>Só podemos somar ou subtrair letras iguais com o mesmo expoente.
+            \[ 3x + 2x + 5y = 5x + 5y \]</p>
+        </section>
+
+        <section id="mapa-mental">
+            <h2>3. Mapa Mental</h2>
+            <div class="mm-blogger-container">
+                <div class="mm-wrapper">
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Conceito de Variável <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A variável é o elemento central da álgebra, funcionando como um 'espaço reservado' para qualquer valor numérico. Ela permite que escrevamos leis gerais que se aplicam a todos os números, não apenas a casos específicos. Na prática, a variável é o que permite a criação de planilhas dinâmicas no Excel e algoritmos inteligentes, onde o resultado final depende de uma entrada que pode variar constantemente de acordo com o contexto do usuário ou do sistema.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Tradução Lógica <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Aprender álgebra é, antes de tudo, um exercício de tradução. Devemos converter enunciados em linguagem natural para símbolos matemáticos rigorosos. Termos como 'dobro', 'triplo', 'sucessor' e 'diferença' possuem equivalentes algébricos precisos (2x, 3x, x+1, x-y). Essa habilidade de tradução é fundamental para resolver problemas de lógica, modelar negócios financeiros e estruturar o pensamento para a resolução de problemas complexos em qualquer área do conhecimento.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mm-center"><h3>ÁLGEBRA: EXPRESSÕES</h3></div>
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Valor Numérico <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">O valor numérico é o resultado que obtemos quando 'alimentamos' a expressão algébrica com dados reais. Ao substituir as letras por números e realizar as operações respeitando a hierarquia (multiplicação antes da soma), transformamos a fórmula abstrata em uma resposta concreta. É exatamente o que acontece quando um GPS calcula sua rota ou um aplicativo de banco calcula o rendimento do seu investimento: eles pegam a fórmula (expressão) e inserem seus dados (valor numérico).</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Termos Semelhantes <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A simplificação de expressões através da redução de termos semelhantes é o que mantém a matemática organizada e eficiente. Só podemos agrupar termos que possuam a mesma parte literal (letras e expoentes idênticos). Essa regra de organização é análoga à organização de pastas em um computador ou categorias em um estoque: ela permite reduzir a complexidade visual e computacional, tornando fórmulas gigantescas em expressões simples, limpas e muito mais fáceis de serem manipuladas.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="atividades-mc">
+            <h2>4. Atividades: Múltipla Escolha</h2>
+            <div class="question" id="q1">
+                <p><span class="destaque-term">Questão 1:</span> Qual das alternativas abaixo representa corretamente a frase: "O triplo de um número adicionado a dez"?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q1', 'A', 'B')">A) \( 3 + x + 10 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'B', 'B')">B) \( 3x + 10 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'C', 'B')">C) \( x^3 + 10 \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'D', 'B')">D) \( 3(x + 10) \)</button>
+                </div>
+                <div class="feedback" id="fb-q1">Tradução: Triplo de um número = \( 3x \). Adicionado a dez = \( + 10 \). Portanto, \( 3x + 10 \).</div>
+            </div>
+            <div class="question" id="q2">
+                <p><span class="destaque-term">Questão 2:</span> Se \( a = 4 \) e \( b = 5 \), qual o valor numérico da expressão \( 3a - 2b \)?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q2', 'A', 'A')">A) 2</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'B', 'A')">B) 22</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'C', 'A')">C) 12</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'D', 'A')">D) 10</button>
+                </div>
+                <div class="feedback" id="fb-q2">Cálculo: \( 3(4) - 2(5) = 12 - 10 = 2 \).</div>
+            </div>
+            <div class="question" id="q3">
+                <p><span class="destaque-term">Questão 3:</span> Simplificando a expressão \( 5x + 3y - 2x + y \), obtemos:</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q3', 'A', 'C')">A) \( 7x + 4y \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'B', 'C')">B) \( 3x + 3y \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'C', 'C')">C) \( 3x + 4y \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'D', 'C')">D) \( 7xy \)</button>
+                </div>
+                <div class="feedback" id="fb-q3">Lógica: Junte os x (\( 5x - 2x = 3x \)) e junte os y (\( 3y + y = 4y \)).</div>
+            </div>
+        </section>
+
+        <section id="atividades-vf">
+            <h2>5. Atividades: Verdadeiro ou Falso</h2>
+            <div class="question" id="vf1">
+                <p><span class="destaque-term">1.</span> Na expressão \( 7x \), o número 7 é chamado de coeficiente.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf1">Verdadeiro! O coeficiente é o número que multiplica a variável.</div>
+            </div>
+            <div class="question" id="vf2">
+                <p><span class="destaque-term">2.</span> Podemos somar \( 2x \) com \( 2y \) e obter \( 4xy \).</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'V', 'F')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'F', 'F')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf2">Falso! Só podemos somar termos semelhantes (letras iguais). \( 2x + 2y \) não pode ser simplificado.</div>
+            </div>
+            <div class="question" id="vf3">
+                <p><span class="destaque-term">3.</span> Se o valor de \( x \) mudar, o valor numérico da expressão também poderá mudar.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf3">Verdadeiro! Por isso chamamos as letras de 'variáveis'.</div>
+            </div>
+        </section>
+
+        <section id="flashcards">
+            <h2>6. Flashcards</h2>
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é Variável?</div><div class="flashcard-back">Letra que representa um valor.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é Coeficiente?</div><div class="flashcard-back">Número que multiplica a letra.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Termo Independente?</div><div class="flashcard-back">Número que aparece sem letra.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Dobro de x?</div><div class="flashcard-back">2x.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Sucessor de n?</div><div class="flashcard-back">n + 1.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Quadrado de a?</div><div class="flashcard-back">a².</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Valor Numérico?</div><div class="flashcard-back">Resultado ao trocar letra por nº.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Termos Semelhantes?</div><div class="flashcard-back">Possuem a mesma letra e expoente.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">3x + x ?</div><div class="flashcard-back">4x.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Incógnita?</div><div class="flashcard-back">Sinônimo de variável (o desconhecido).</div></div></div>
+            </div>
+        </section>
+
+        <section id="dicionario">
+            <h2>7. Dicionário</h2>
+            <div class="dict-item"><span class="dict-term">Abstração:</span> Capacidade de pensar em conceitos gerais sem depender de casos específicos.</div>
+            <div class="dict-item"><span class="dict-term">Algébrica:</span> Expressão que contém letras representando quantidades.</div>
+            <div class="dict-item"><span class="dict-term">Coeficiente:</span> O fator numérico que determina a escala de uma variável.</div>
+            <div class="dict-item"><span class="dict-term">Diferença:</span> Resultado de uma subtração entre termos algébricos.</div>
+            <div class="dict-item"><span class="dict-term">Expoente:</span> Indica o grau de uma variável (como o 2 em \( x^2 \)).</div>
+            <div class="dict-item"><span class="dict-term">Fórmula:</span> Expressão algébrica que descreve uma regra ou lei universal.</div>
+            <div class="dict-item"><span class="dict-term">Grau:</span> O maior expoente presente em uma expressão algébrica.</div>
+            <div class="dict-item"><span class="dict-term">Incógnita:</span> O valor 'escondido' que buscamos descobrir em problemas de álgebra.</div>
+            <div class="dict-item"><span class="dict-term">Literal:</span> Parte da expressão composta apenas pelas letras e seus expoentes.</div>
+            <div class="dict-item"><span class="dict-term">Modelagem:</span> Criar expressões para representar situações do mundo real.</div>
+            <div class="dict-item"><span class="dict-term">Monômio:</span> Expressão formada por apenas um termo (ex: \( 5x \)).</div>
+            <div class="dict-item"><span class="dict-term">Polinômio:</span> Expressão formada pela soma de vários monômios.</div>
+            <div class="dict-item"><span class="dict-term">Simplificação:</span> Reduzir a expressão ao menor número de termos possível.</div>
+            <div class="dict-item"><span class="dict-term">Termo:</span> Cada parte de uma expressão separada por sinais de + ou -.</div>
+            <div class="dict-item"><span class="dict-term">Variável:</span> Símbolo que pode ser substituído por diversos valores numéricos.</div>
+        </section>
+
+        <section id="materiais">
+            <h2>8. Materials Complementares</h2>
+            <ul>
+                <li><a href="https://pt.khanacademy.org/math/algebra/x2f8bb11595b61c86:foundation-algebra" target="_blank">Khan Academy: Introdução à Álgebra</a> - Vídeos e exercícios básicos.</li>
+                <li><a href="https://www.youtube.com/watch?v=algebra-para-iniciantes" target="_blank">Vídeo: Álgebra para iniciantes</a> - Explicação visual e didática.</li>
+                <li><a href="https://www.mathgames.com/algebra" target="_blank">MathGames: Algebra Practice</a> - Jogos para treinar substituição e simplificação (em inglês).</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+    // Função para múltipla escolha e V/F
+    function checkAnswer(questionId, selected, correct) {
+        let fbDiv = document.getElementById('fb-' + questionId);
+        if (!fbDiv) return;
+        if (selected === correct) {
+            fbDiv.classList.add('correct');
+            fbDiv.classList.remove('incorrect');
+        } else {
+            fbDiv.classList.add('incorrect');
+            fbDiv.classList.remove('correct');
+        }
+        fbDiv.style.display = 'block';
+        fbDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Inicialização do mapa mental (expansão dos nós)
+    (function() {
+        const nodes = document.querySelectorAll('.mm-node');
+        if (nodes.length === 0) return;
+        nodes.forEach(node => {
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isActive = this.classList.contains('active');
+                nodes.forEach(n => {
+                    n.classList.remove('active');
+                    const icon = n.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '+';
+                    n.style.zIndex = '10';
+                });
+                if (!isActive) {
+                    this.classList.add('active');
+                    this.style.zIndex = '100';
+                    const icon = this.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '-';
+                }
+            });
+        });
+        document.addEventListener('click', function() {
+            nodes.forEach(n => {
+                n.classList.remove('active');
+                const icon = n.querySelector('.mm-icon');
+                if (icon) icon.textContent = '+';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

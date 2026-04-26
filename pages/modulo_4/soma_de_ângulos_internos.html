@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soma dos Ângulos Internos: A Harmonia Oculta - TrilhaMath</title>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #ED7C3A;
+            --secondary: #2f4887;
+            --dark: #1F2937;
+            --light: #F3F4F6;
+            --danger: #EF4444;
+            --bg-body: #ffffff;
+        }
+
+        /* Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-logo {
+            height: 30px;
+            mix-blend-mode: multiply;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+        .nav-btn-next {
+            background: var(--primary);
+            color: white !important;
+        }
+        .nav-btn-next:hover {
+            background: #d35400 !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(237, 124, 58, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            padding: 80px 0 0 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 0.1rem;
+            margin-bottom: 2rem;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--primary) !important;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+        }
+
+        .destaque-term {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Mapa Mental */
+        .mm-blogger-container {
+            background-color: #f1f5f9;
+            padding: 40px 10px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .mm-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .mm-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .mm-center {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border-left: 6px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .mm-node-wrapper {
+            flex: 0 1 220px;
+            position: relative;
+            min-height: 50px;
+        }
+
+        .mm-node {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .mm-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .mm-node.active {
+            position: absolute;
+            width: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .mm-node-header {
+            padding: 12px 15px;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .mm-node.active .mm-node-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mm-node-content {
+            padding: 0;
+            max-height: 0;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .mm-node.active .mm-node-content {
+            padding: 15px;
+            max-height: 400px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .mm-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        /* Quiz & VF */
+        .question {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        button.option-btn,
+        button.vf-btn {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        button.option-btn:hover,
+        button.vf-btn:hover {
+            border-color: var(--primary);
+            background: #fffaf0;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #D1FAE5;
+            color: #065F46;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #FEE2E2;
+            color: #991B1B;
+            display: block;
+        }
+
+        /* Flashcards */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .flashcard {
+            background: transparent;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flip .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background-color: white;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            font-weight: bold;
+        }
+
+        .flashcard-back {
+            background-color: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Dictionary */
+        .dict-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+
+        .dict-term {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .img-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d1d5db;
+        }
+
+        .img-placeholder {
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .mm-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .mm-node.active {
+                width: 100%;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="../../index.html" class="nav-link">Início</a>
+        </div>
+        <img src="../../assets/logo-horizontal.png" alt="TrilhaMath" class="nav-logo">
+        <div class="nav-right">
+            <a href="poligonos.html" class="nav-link nav-btn-next">Avançar</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Soma dos Ângulos Internos: A Harmonia Oculta</h1>
+            <p>Descubra a regra universal que une todos os polígonos e aprenda por que, não importa o tamanho da forma, a soma dos seus ângulos é sempre previsível.</p>
+        </header>
+
+        <section id="introducao">
+            <h2>1. Introdução e Contexto</h2>
+            <div class="img-container">
+                <p class="img-placeholder">[Sugestão de Imagem: Uma animação mostrando um quadrado sendo dividido em dois triângulos, e um pentágono em três, com setas indicando que cada triângulo 'carrega' 180 graus para a soma total.]</p>
+                <span class="img-caption">Todo polígono é, na verdade, um conjunto de triângulos escondidos.</span>
+            </div>
+            <p>Imagine que você recebeu a missão de projetar uma claraboia em formato de estrela para um museu de arte moderna. Para que os vidros se encaixem perfeitamente, você precisa saber o valor exato de cada ângulo interno. Mas como calcular isso se a forma tem muitos lados e parece complexa? A resposta está em uma das descobertas mais elegantes da geometria: a <span class="destaque-term">Soma dos Ângulos Internos</span>. Existe uma harmonia matemática que governa todos os polígonos, desde o simples triângulo até o dodecágono mais complexo. Essa regra nos diz que, cada vez que adicionamos um lado a uma forma, adicionamos exatamente uma "unidade de triângulo" à sua soma angular. É como se a geometria tivesse um código de barras que define sua estrutura interna.</p>
+            <p>No mundo real, esse conhecimento é o que permite a construção de cúpulas geodésicas, como as do Epcot Center ou de estufas botânicas gigantes. Os engenheiros usam a soma dos ângulos internos para garantir que as estruturas se fechem com precisão milimétrica; se a soma estiver errada por apenas um grau, a construção inteira pode sofrer tensões perigosas ou simplesmente não se encaixar. Na computação gráfica, os desenvolvedores de jogos usam essa lógica para criar modelos 3D complexos (os famosos "polígonos"), dividindo formas orgânicas em milhares de triângulos para que a placa de vídeo possa calcular as sombras e as luzes com rapidez e realismo.</p>
+            <p>Nesta lição, vamos desvendar a "Fórmula Mestre" da soma dos ângulos. Você aprenderá que o triângulo é o átomo da geometria plana, possuindo sempre \( 180^\circ \). A partir dele, vamos ver como qualquer polígono pode ser fatiado em triângulos, revelando por que um quadrado tem \( 360^\circ \) e um pentágono tem \( 540^\circ \). Vamos praticar o uso da fórmula \( S = (n - 2) \times 180 \) e descobrir como ela simplifica a vida de arquitetos, designers e programadores. Dominar esse conceito é ganhar a chave para entender a integridade das formas e a beleza da proporção no nosso espaço. Prepare-se para somar conhecimento e elevar sua percepção geométrica!</p>
+        </section>
+
+        <section id="teoria">
+            <h2>2. Teoria e Exemplos</h2>
+            <p>A soma dos ângulos internos de qualquer polígono convexo depende apenas do seu número de lados.</p>
+            
+            <h3>A. O Teorema do Triângulo</h3>
+            <p>A regra de ouro da geometria plana afirma que: em qualquer triângulo, a soma dos três ângulos internos é sempre igual a <strong>180°</strong>.
+            \[ \alpha + \beta + \gamma = 180^\circ \]</p>
+            
+            <h3>B. A Fórmula Geral</h3>
+            <p>Para um polígono de <strong>n</strong> lados, a soma dos ângulos internos (\( S_i \)) é dada pela fórmula:
+            \[ S_i = (n - 2) \times 180^\circ \]</p>
+            <p>Isso acontece porque podemos dividir qualquer polígono de \( n \) lados em \( (n - 2) \) triângulos.</p>
+            
+            <h3>C. Exemplos Práticos</h3>
+            <ul>
+                <li><strong>Quadrilátero (4 lados):</strong> \( (4-2) \times 180 = 2 \times 180 = 360^\circ \).</li>
+                <li><strong>Pentágono (5 lados):</strong> \( (5-2) \times 180 = 3 \times 180 = 540^\circ \).</li>
+                <li><strong>Hexágono (6 lados):</strong> \( (6-2) \times 180 = 4 \times 180 = 720^\circ \).</li>
+            </ul>
+        </section>
+
+        <section id="mapa-mental">
+            <h2>3. Mapa Mental</h2>
+            <div class="mm-blogger-container">
+                <div class="mm-wrapper">
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Base: O Triângulo <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">O triângulo é a unidade fundamental de toda a geometria plana. O fato de que seus ângulos internos sempre somam 180 graus é a verdade absoluta sobre a qual todas as outras formas são construídas. Essa estabilidade angular é o que torna o triângulo a forma mais rígida e resistente da engenharia, sendo usada em treliças de pontes e guindastes. Ao entender o triângulo, entendemos a 'peça de lego' básica do universo geométrico.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Decomposição Triangular <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Qualquer polígono complexo pode ser decomposto em triângulos a partir de um único vértice. Essa técnica de fatiamento revela que a soma dos ângulos de um polígono é simplesmente a soma dos 180 graus de cada triângulo que o compõe. Essa visão 'de dentro para fora' permite que matemáticos e computadores processem formas irregulares com a mesma facilidade que lidam com formas simples, simplificando cálculos de área e volume em ambientes digitais 3D.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mm-center"><h3>SOMA DOS ÂNGULOS</h3></div>
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Lógica da Fórmula <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A fórmula Si = (n - 2) * 180 não é apenas um conjunto de letras, é uma instrução lógica. O 'n - 2' indica exatamente quantos triângulos cabem dentro do polígono. O -2 representa os dois lados que não podem formar um novo triângulo a partir do vértice de origem. Entender essa dedução lógica remove a necessidade de decorar a fórmula, transformando o cálculo em um processo intuitivo de contagem de triângulos internos para qualquer polígono convexo.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Ângulo em Polígonos Regulares <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Em polígonos regulares (lados e ângulos iguais), podemos descobrir o valor de UM único ângulo dividindo a soma total pelo número de lados. Essa aplicação é vital no design de padrões, na fabricação de engrenagens e na criação de mosaicos. Saber que um hexágono regular tem ângulos de 120 graus permite prever como eles se encaixarão perfeitamente para formar uma colmeia ou uma malha de rede, demonstrando a eficiência geométrica da natureza.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="atividades-mc">
+            <h2>4. Atividades: Múltipla Escolha</h2>
+            <div class="question" id="q1">
+                <p><span class="destaque-term">Questão 1:</span> Qual é a soma dos ângulos internos de um triângulo equilátero?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q1', 'A', 'A')">A) \( 180^\circ \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'B', 'A')">B) \( 360^\circ \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'C', 'A')">C) \( 60^\circ \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'D', 'A')">D) \( 90^\circ \)</button>
+                </div>
+                <div class="feedback" id="fb-q1">Regra de Ouro: Não importa o tipo de triângulo, a soma é sempre \( 180^\circ \).</div>
+            </div>
+            <div class="question" id="q2">
+                <p><span class="destaque-term">Questão 2:</span> Um polígono possui 8 lados (octógono). Qual a soma de seus ângulos internos?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q2', 'A', 'C')">A) \( 720^\circ \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'B', 'C')">B) \( 1440^\circ \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'C', 'C')">C) \( 1080^\circ \)</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'D', 'C')">D) \( 1800^\circ \)</button>
+                </div>
+                <div class="feedback" id="fb-q2">Cálculo: \( S = (8-2) \times 180 = 6 \times 180 = 1080^\circ \).</div>
+            </div>
+            <div class="question" id="q3">
+                <p><span class="destaque-term">Questão 3:</span> Se a soma dos ângulos internos de um polígono é \( 360^\circ \), quantos lados ele possui?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q3', 'A', 'B')">A) 3</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'B', 'B')">B) 4</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'C', 'B')">C) 5</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'D', 'B')">D) 6</button>
+                </div>
+                <div class="feedback" id="fb-q3">Lógica: \( 360^\circ \) corresponde a 2 triângulos (\( 2 \times 180 \)). Se tem 2 triângulos, o polígono tem \( 2+2=4 \) lados.</div>
+            </div>
+        </section>
+
+        <section id="atividades-vf">
+            <h2>5. Atividades: Verdadeiro ou Falso</h2>
+            <div class="question" id="vf1">
+                <p><span class="destaque-term">1.</span> Todos os quadriláteros possuem a mesma soma de ângulos internos, independentemente de sua forma.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf1">Verdadeiro! Quadrados, retângulos, trapézios ou losangos sempre somam \( 360^\circ \).</div>
+            </div>
+            <div class="question" id="vf2">
+                <p><span class="destaque-term">2.</span> À medida que aumentamos o número de lados de um polígono, a soma dos ângulos internos diminui.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'V', 'F')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'F', 'F')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf2">Falso! Cada lado novo adiciona mais 180° à soma total. A soma sempre aumenta.</div>
+            </div>
+            <div class="question" id="vf3">
+                <p><span class="destaque-term">3.</span> Para descobrir o valor de cada ângulo de um polígono regular, basta dividir a soma total pelo número de lados.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf3">Verdadeiro! Em formas regulares, os ângulos são todos iguais entre si.</div>
+            </div>
+        </section>
+
+        <section id="flashcards">
+            <h2>6. Flashcards</h2>
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Soma no Triângulo?</div><div class="flashcard-back">Sempre 180°.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Soma no Quadrado?</div><div class="flashcard-back">Sempre 360°.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Fórmula da Soma?</div><div class="flashcard-back">S = (n-2) * 180.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é 'n'?</div><div class="flashcard-back">Número de lados do polígono.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Pentágono (lados)?</div><div class="flashcard-back">5 lados.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Hexágono (soma)?</div><div class="flashcard-back">720°.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Polígono Regular?</div><div class="flashcard-back">Lados e ângulos iguais.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Decomposição?</div><div class="flashcard-back">Dividir formas em triângulos.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Ângulo Interno?</div><div class="flashcard-back">Ângulo dentro do polígono.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Soma Ext. total?</div><div class="flashcard-back">Sempre 360° para qualquer polígono.</div></div></div>
+            </div>
+        </section>
+
+        <section id="dicionario">
+            <h2>7. Dicionário</h2>
+            <div class="dict-item"><span class="dict-term">Ângulo Interno:</span> A abertura formada por dois lados consecutivos no interior de um polígono.</div>
+            <div class="dict-item"><span class="dict-term">Convexo:</span> Polígono onde todos os ângulos internos medem menos de 180°.</div>
+            <div class="dict-item"><span class="dict-term">Decomposição:</span> Técnica de dividir um polígono em partes mais simples (geralmente triângulos).</div>
+            <div class="dict-item"><span class="dict-term">Dodecágono:</span> Polígono de 12 lados, usado em moedas e designs complexos.</div>
+            <div class="dict-item"><span class="dict-term">Equilátero:</span> Triângulo que possui todos os lados e ângulos iguais (60° cada).</div>
+            <div class="dict-item"><span class="dict-term">Fórmula:</span> A expressão matemática Si = (n-2) * 180 que define a soma angular.</div>
+            <div class="dict-item"><span class="dict-term">Geodésica:</span> Estrutura arquitetônica baseada em uma malha de triângulos e polígonos.</div>
+            <div class="dict-item"><span class="dict-term">Harmonia:</span> A proporção matemática constante que rege a estrutura das formas.</div>
+            <div class="dict-item"><span class="dict-term">Hexágono:</span> Polígono de 6 lados, famoso pela sua eficiência em colmeias.</div>
+            <div class="dict-item"><span class="dict-term">Octógono:</span> Polígono de 8 lados, muito comum em sinais de trânsito e arenas.</div>
+            <div class="dict-item"><span class="dict-term">Pentágono:</span> Polígono de 5 lados, símbolo de instituições e arquitetura clássica.</div>
+            <div class="dict-item"><span class="dict-term">Polígono:</span> Figura plana fechada formada por segmentos de reta.</div>
+            <div class="dict-item"><span class="dict-term">Regular:</span> Polígono que mantém a simetria perfeita em todos os seus lados e ângulos.</div>
+            <div class="dict-item"><span class="dict-term">Treliça:</span> Estrutura de engenharia que usa o triângulo como base de sustentação.</div>
+            <div class="dict-item"><span class="dict-term">Vértice:</span> O ponto de encontro de dois lados de um polígono onde reside o ângulo.</div>
+        </section>
+
+        <section id="materiais">
+            <h2>8. Materials Complementares</h2>
+            <ul>
+                <li><a href="https://pt.khanacademy.org/math/geometry/hs-geo-foundations/hs-geo-polygons" target="_blank">Khan Academy: Ângulos em Polígonos</a> - Teoria e prática.</li>
+                <li><a href="https://www.youtube.com/watch?v=soma-angulos-internos-facil" target="_blank">Vídeo: Por que n-2?</a> - Explicação visual da fórmula.</li>
+                <li><a href="https://www.geogebra.org/m/m6uA2v4z" target="_blank">GeoGebra: Explorador de Polígonos</a> - Altere os lados e veja a soma mudar.</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+    // Função para múltipla escolha e V/F
+    function checkAnswer(questionId, selected, correct) {
+        let fbDiv = document.getElementById('fb-' + questionId);
+        if (!fbDiv) return;
+        if (selected === correct) {
+            fbDiv.classList.add('correct');
+            fbDiv.classList.remove('incorrect');
+        } else {
+            fbDiv.classList.add('incorrect');
+            fbDiv.classList.remove('correct');
+        }
+        fbDiv.style.display = 'block';
+        fbDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Inicialização do mapa mental (expansão dos nós)
+    (function() {
+        const nodes = document.querySelectorAll('.mm-node');
+        if (nodes.length === 0) return;
+        nodes.forEach(node => {
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isActive = this.classList.contains('active');
+                nodes.forEach(n => {
+                    n.classList.remove('active');
+                    const icon = n.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '+';
+                    n.style.zIndex = '10';
+                });
+                if (!isActive) {
+                    this.classList.add('active');
+                    this.style.zIndex = '100';
+                    const icon = this.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '-';
+                }
+            });
+        });
+        document.addEventListener('click', function() {
+            nodes.forEach(n => {
+                n.classList.remove('active');
+                const icon = n.querySelector('.mm-icon');
+                if (icon) icon.textContent = '+';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Números Racionais: A Matemática das Partes - TrilhaMath</title>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #ED7C3A;
+            --secondary: #2f4887;
+            --dark: #1F2937;
+            --light: #F3F4F6;
+            --danger: #EF4444;
+            --bg-body: #ffffff;
+        }
+
+        /* Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-logo {
+            height: 30px;
+            mix-blend-mode: multiply;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+        .nav-btn-next {
+            background: var(--primary);
+            color: white !important;
+        }
+        .nav-btn-next:hover {
+            background: #d35400 !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(237, 124, 58, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            padding: 80px 0 0 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 0.1rem;
+            margin-bottom: 2rem;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--primary) !important;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+        }
+
+        .destaque-term {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Mapa Mental */
+        .mm-blogger-container {
+            background-color: #f1f5f9;
+            padding: 40px 10px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .mm-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .mm-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .mm-center {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border-left: 6px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .mm-node-wrapper {
+            flex: 0 1 220px;
+            position: relative;
+            min-height: 50px;
+        }
+
+        .mm-node {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .mm-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .mm-node.active {
+            position: absolute;
+            width: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .mm-node-header {
+            padding: 12px 15px;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .mm-node.active .mm-node-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mm-node-content {
+            padding: 0;
+            max-height: 0;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .mm-node.active .mm-node-content {
+            padding: 15px;
+            max-height: 400px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .mm-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        /* Quiz & VF */
+        .question {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        button.option-btn,
+        button.vf-btn {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        button.option-btn:hover,
+        button.vf-btn:hover {
+            border-color: var(--primary);
+            background: #fffaf0;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #D1FAE5;
+            color: #065F46;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #FEE2E2;
+            color: #991B1B;
+            display: block;
+        }
+
+        /* Flashcards */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .flashcard {
+            background: transparent;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flip .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background-color: white;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            font-weight: bold;
+        }
+
+        .flashcard-back {
+            background-color: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Dictionary */
+        .dict-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+
+        .dict-term {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .img-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d1d5db;
+        }
+
+        .img-placeholder {
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .mm-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .mm-node.active {
+                width: 100%;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="../../index.html" class="nav-link">Início</a>
+        </div>
+        <img src="../../assets/logo-horizontal.png" alt="TrilhaMath" class="nav-logo">
+        <div class="nav-right">
+            <a href="expressoes_numericas.html" class="nav-link nav-btn-next">Avançar</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Números Racionais: A Matemática das Partes</h1>
+            <p>Descubra como os números se tornam precisos para medir o que não é inteiro, transformando frações e decimais em ferramentas do cotidiano.</p>
+        </header>
+
+        <section id="introducao">
+            <h2>1. Introdução e Contexto</h2>
+            <div class="img-container">
+                <p class="img-placeholder">[Sugestão de Imagem: Uma mesa com alimentos fatiados (pizza, melancia), um posto de gasolina mostrando preços com 3 casas decimais e uma fita métrica com milímetros destacados.]</p>
+                <span class="img-caption">O mundo raramente vem em unidades inteiras; os racionais medem a realidade.</span>
+            </div>
+            <p>Você já tentou comprar apenas meio quilo de carne ou notou que o preço da gasolina nunca é um número inteiro, como R$ 5,00, mas sim algo como R$ 5,789? Na vida real, quase nada acontece em blocos perfeitos e fechados. Nós cortamos pizzas, dividimos o tempo em minutos e segundos, e medimos nossa altura com centímetros que ficam entre um metro e outro. Para representar essas quantidades que "quebram" a unidade, a matemática criou o conjunto dos <span class="destaque-term">Números Racionais</span>. O nome vem de "razão", que nada mais é do que o resultado da divisão entre dois números inteiros. Eles são a ponte entre a contagem simples e a medida de precisão absoluta.</p>
+            <p>Imagine um cientista em um laboratório dosando uma vacina: se ele usar 1ml a mais ou a menos, o resultado pode ser catastrófico. Ele precisa da precisão dos decimais. Pense em um mestre de obras lendo uma planta: ele lida com frações de polegadas e metros o tempo todo. Até mesmo na música, as notas possuem tempos que são frações de um compasso (semínimas, colcheias). Sem os racionais, não teríamos GPS (que usa coordenadas decimais precisas), não teríamos comércio internacional (que depende de taxas de câmbio fracionadas) e nem mesmo poderíamos seguir uma receita de bolo que pede 3/4 de xícara de açúcar. Eles são os números da "partilha" e do detalhe.</p>
+            <p>Nesta lição, vamos aprender a transitar com facilidade entre dois mundos: o das Frações e o dos Números Decimais. Você descobrirá que eles são apenas duas formas diferentes de dizer a mesma coisa. Vamos desvendar como transformar uma "fatia de pizza" (fração) em um "preço no supermercado" (decimal) e como realizar operações que garantam que você nunca saia perdendo em uma divisão de recursos. Dominar os números racionais é essencial para ter autonomia financeira, sucesso em carreiras técnicas e para compreender a complexidade do mundo físico, onde a perfeição está nos detalhes das pequenas partes. Prepare-se para fatiar a matemática e entender o poder da razão!</p>
+        </section>
+
+        <section id="teoria">
+            <h2>2. Theory e Exemplos</h2>
+            <p>Os números racionais formam o conjunto \( \mathbb{Q} \), definidos como qualquer número que pode ser escrito na forma de fração \( \frac{a}{b} \), onde \( b \neq 0 \).</p>
+            
+            <h3>A. Frações: A Representação Visual</h3>
+            <p>Uma fração indica em quantas partes o todo foi dividido (Denominador) e quantas dessas partes estamos considerando (Numerador).</p>
+            <ul>
+                <li><strong>Exemplo:</strong> \( \frac{3}{4} \) significa que dividimos algo em 4 partes e pegamos 3.</li>
+            </ul>
+            
+            <h3>B. Números Decimais: A Praticidade</h3>
+            <p>São frações com base decimal (10, 100, 1000...) escritas com vírgula.
+            \[ \frac{1}{2} = 0,5 \quad | \quad \frac{1}{4} = 0,25 \]</p>
+            
+            <h3>C. Transformações</h3>
+            <p>Para transformar fração em decimal, basta dividir o numerador pelo denominador.
+            \[ \frac{4}{5} \rightarrow 4 \div 5 = 0,8 \]</p>
+        </section>
+
+        <section id="mapa-mental">
+            <h2>3. Mapa Mental</h2>
+            <div class="mm-blogger-container">
+                <div class="mm-wrapper">
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Conceito de Razão <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A palavra 'racional' deriva de razão, que na matemática significa a comparação entre dois números através da divisão. Todo número racional pode ser expresso como a divisão de um inteiro por outro inteiro (diferente de zero). Isso inclui não apenas as frações óbvias, mas também os próprios números inteiros (como 5, que pode ser escrito como 5/1) e as dízimas periódicas, que são números decimais infinitos com padrões que se repetem.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Frações e Decimais <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Embora pareçam mundos distintos, frações e decimais são duas linguagens para a mesma realidade. A fração é mais usada em construções teóricas, música e culinária, pois mantém a exatidão visual das partes. Já os números decimais são a linguagem padrão do dinheiro, da ciência experimental e da tecnologia, facilitando comparações rápidas e operações em calculadoras. Saber converter entre essas duas formas é uma das habilidades mais práticas da matemática moderna.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mm-center"><h3>NÚMEROS RACIONAIS</h3></div>
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Operações de Precisão <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Somar, subtrair, multiplicar e dividir números racionais exige atenção redobrada aos sinais e às vírgulas. Na adição de decimais, o alinhamento da vírgula é a lei suprema. Na multiplicação de frações, operamos numerador com numerador e denominador com denominador. Essas regras garantem que possamos calcular desde o desconto em uma loja até a trajetória de um satélite com erro zero, permitindo que a tecnologia funcione de maneira previsível e segura.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Aplicações no Dia a Dia <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Os racionais estão em todo lugar: no posto de gasolina (R$ 5,899), na farmácia (dosagem de 0,5mg), no mercado (1,5kg de arroz) e até no seu celular (32,5 GB de espaço livre). Eles permitem que a economia funcione com justiça, que a medicina seja segura e que as trocas comerciais sejam precisas. Sem eles, viveríamos em um mundo de aproximações grosseiras, onde dividir uma conta ou medir uma distância seria sempre motivo de briga e imprecisão.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="atividades-mc">
+            <h2>4. Atividades: Múltipla Escolha</h2>
+            <div class="question" id="q1">
+                <p><span class="destaque-term">Questão 1:</span> Uma pizza foi cortada em 8 fatias iguais. João comeu 3 fatias. Qual a fração que representa a parte da pizza que João comeu?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q1', 'A', 'A')">A) 3/8</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'B', 'A')">B) 8/3</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'C', 'A')">C) 5/8</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'D', 'A')">D) 1/2</button>
+                </div>
+                <div class="feedback" id="fb-q1">Lógica: O total de partes (8) fica no denominador. As partes consumidas (3) ficam no numerador.</div>
+            </div>
+            <div class="question" id="q2">
+                <p><span class="destaque-term">Questão 2:</span> Maria foi ao mercado e comprou 2,5 kg de batatas e 1,75 kg de cebolas. Qual o peso total da compra de Maria?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q2', 'A', 'C')">A) 3,25 kg</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'B', 'C')">B) 4,00 kg</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'C', 'C')">C) 4,25 kg</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'D', 'C')">D) 4,50 kg</button>
+                </div>
+                <div class="feedback" id="fb-q2">Cálculo: Somamos alinhando as vírgulas: \( 2,50 + 1,75 = 4,25 \).</div>
+            </div>
+            <div class="question" id="q3">
+                <p><span class="destaque-term">Questão 3:</span> Qual é a representação decimal da fração 1/4?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q3', 'A', 'B')">A) 0,4</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'B', 'B')">B) 0,25</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'C', 'B')">C) 0,5</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'D', 'B')">D) 0,14</button>
+                </div>
+                <div class="feedback" id="fb-q3">Divisão: Dividindo 1 por 4 obtemos exatamente 0,25.</div>
+            </div>
+        </section>
+
+        <section id="atividades-vf">
+            <h2>5. Atividades: Verdadeiro ou Falso</h2>
+            <div class="question" id="vf1">
+                <p><span class="destaque-term">1.</span> Todo número inteiro também pode ser considerado um número racional.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf1">Verdadeiro! Qualquer inteiro 'n' pode ser escrito como n/1.</div>
+            </div>
+            <div class="question" id="vf2">
+                <p><span class="destaque-term">2.</span> Nas frações, o denominador pode ser qualquer número inteiro, inclusive o zero.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'V', 'F')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'F', 'F')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf2">Falso! Jamais podemos dividir por zero na matemática.</div>
+            </div>
+            <div class="question" id="vf3">
+                <p><span class="destaque-term">3.</span> O número 0,333... (dízima periódica) não é um número racional pois é infinito.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'V', 'F')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'F', 'F')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf3">Falso! Dízimas periódicas podem ser escritas como frações (neste caso, 1/3), por isso são racionais.</div>
+            </div>
+        </section>
+
+        <section id="flashcards">
+            <h2>6. Flashcards</h2>
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Símbolo do conjunto?</div><div class="flashcard-back">Q.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Parte de cima da fração?</div><div class="flashcard-back">Numerador.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Parte de baixo?</div><div class="flashcard-back">Denominador.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Fração 1/2 em decimal?</div><div class="flashcard-back">0,5.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é Quociente?</div><div class="flashcard-back">Resultado da divisão.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Denominador = 0?</div><div class="flashcard-back">Impossível.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Número com vírgula?</div><div class="flashcard-back">Número Decimal.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Frações Equivalentes?</div><div class="flashcard-back">Representam a mesma parte do todo.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Simplificar fração?</div><div class="flashcard-back">Dividir em cima e embaixo pelo mesmo nº.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Dízima Periódica?</div><div class="flashcard-back">Decimal infinito com padrão repetido.</div></div></div>
+            </div>
+        </section>
+
+        <section id="dicionario">
+            <h2>7. Dicionário</h2>
+            <div class="dict-item"><span class="dict-term">Comensurável:</span> Qualidade de algo que pode ser medido em relação a uma unidade comum.</div>
+            <div class="dict-item"><span class="dict-term">Decimal:</span> Sistema numérico baseado na potência de dez e separado por vírgula.</div>
+            <div class="dict-item"><span class="dict-term">Denominador:</span> Indica em quantas partes iguais o inteiro foi fatiado.</div>
+            <div class="dict-item"><span class="dict-term">Dízima:</span> Número decimal com infinitas casas decimais.</div>
+            <div class="dict-item"><span class="dict-term">Equivalência:</span> Quando duas frações diferentes representam o mesmo valor real.</div>
+            <div class="dict-item"><span class="dict-term">Fração:</span> Forma de representar a divisão de um todo em partes iguais.</div>
+            <div class="dict-item"><span class="dict-term">Geratriz:</span> A fração que dá origem a uma dízima periódica específica.</div>
+            <div class="dict-item"><span class="dict-term">Irredutível:</span> Fração que não pode mais ser simplificada.</div>
+            <div class="dict-item"><span class="dict-term">Mista:</span> Fração que possui uma parte inteira e uma parte fracionária.</div>
+            <div class="dict-item"><span class="dict-term">Numerador:</span> Indica quantas das partes divididas estamos de fato utilizando.</div>
+            <div class="dict-item"><span class="dict-term">Período:</span> A parte decimal que se repete infinitamente em uma dízima.</div>
+            <div class="dict-item"><span class="dict-term">Quociente:</span> O valor numérico resultante de uma razão ou divisão.</div>
+            <div class="dict-item"><span class="dict-term">Racional:</span> Qualquer número que pode ser expresso como a razão de dois inteiros.</div>
+            <div class="dict-item"><span class="dict-term">Razão:</span> Relação de divisão entre duas grandezas numéricas.</div>
+            <div class="dict-item"><span class="dict-term">Simplificação:</span> Processo de tornar uma fração mais simples mantendo seu valor.</div>
+        </section>
+
+        <section id="materiais">
+            <h2>8. Materials Complementares</h2>
+            <ul>
+                <li><a href="https://pt.khanacademy.org/math/arithmetic/fraction-arithmetic" target="_blank">Khan Academy: Aritmética de Frações</a> - Guia visual e prático.</li>
+                <li><a href="https://www.youtube.com/watch?v=decimais-cotidiano" target="_blank">Vídeo: Como usar Números Decimais no dia a dia</a> - Dicas de compras e medidas.</li>
+                <li><a href="https://nrich.maths.org/8283" target="_blank">NRICH: Fraction Match</a> - Jogo de memória com frações e decimais (em inglês).</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+    // Função para múltipla escolha e V/F
+    function checkAnswer(questionId, selected, correct) {
+        let fbDiv = document.getElementById('fb-' + questionId);
+        if (!fbDiv) return;
+        if (selected === correct) {
+            fbDiv.classList.add('correct');
+            fbDiv.classList.remove('incorrect');
+        } else {
+            fbDiv.classList.add('incorrect');
+            fbDiv.classList.remove('correct');
+        }
+        fbDiv.style.display = 'block';
+        fbDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Inicialização do mapa mental (expansão dos nós)
+    (function() {
+        const nodes = document.querySelectorAll('.mm-node');
+        if (nodes.length === 0) return;
+        nodes.forEach(node => {
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isActive = this.classList.contains('active');
+                nodes.forEach(n => {
+                    n.classList.remove('active');
+                    const icon = n.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '+';
+                    n.style.zIndex = '10';
+                });
+                if (!isActive) {
+                    this.classList.add('active');
+                    this.style.zIndex = '100';
+                    const icon = this.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '-';
+                }
+            });
+        });
+        document.addEventListener('click', function() {
+            nodes.forEach(n => {
+                n.classList.remove('active');
+                const icon = n.querySelector('.mm-icon');
+                if (icon) icon.textContent = '+';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

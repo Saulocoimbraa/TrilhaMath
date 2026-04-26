@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Porcentagem: A Linguagem das Partes - TrilhaMath</title>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #ED7C3A;
+            --secondary: #2f4887;
+            --dark: #1F2937;
+            --light: #F3F4F6;
+            --danger: #EF4444;
+            --bg-body: #ffffff;
+        }
+
+        /* Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-logo {
+            height: 30px;
+            mix-blend-mode: multiply;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+        .nav-btn-next {
+            background: var(--primary);
+            color: white !important;
+        }
+        .nav-btn-next:hover {
+            background: #d35400 !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(237, 124, 58, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            padding: 80px 0 0 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 0.1rem;
+            margin-bottom: 2rem;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--primary) !important;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+        }
+
+        .destaque-term {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Mapa Mental */
+        .mm-blogger-container {
+            background-color: #f1f5f9;
+            padding: 40px 10px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .mm-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .mm-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .mm-center {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border-left: 6px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .mm-node-wrapper {
+            flex: 0 1 220px;
+            position: relative;
+            min-height: 50px;
+        }
+
+        .mm-node {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .mm-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .mm-node.active {
+            position: absolute;
+            width: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .mm-node-header {
+            padding: 12px 15px;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .mm-node.active .mm-node-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mm-node-content {
+            padding: 0;
+            max-height: 0;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .mm-node.active .mm-node-content {
+            padding: 15px;
+            max-height: 400px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .mm-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        /* Quiz & VF */
+        .question {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        button.option-btn,
+        button.vf-btn {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        button.option-btn:hover,
+        button.vf-btn:hover {
+            border-color: var(--primary);
+            background: #fffaf0;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #D1FAE5;
+            color: #065F46;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #FEE2E2;
+            color: #991B1B;
+            display: block;
+        }
+
+        /* Flashcards */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .flashcard {
+            background: transparent;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flip .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background-color: white;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            font-weight: bold;
+        }
+
+        .flashcard-back {
+            background-color: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Dictionary */
+        .dict-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+
+        .dict-term {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .img-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d1d5db;
+        }
+
+        .img-placeholder {
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .mm-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .mm-node.active {
+                width: 100%;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="../../index.html" class="nav-link">Início</a>
+        </div>
+        <img src="../../assets/logo-horizontal.png" alt="TrilhaMath" class="nav-logo">
+        <div class="nav-right">
+            <a href="../../index.html" class="nav-link nav-btn-next">Concluir Módulo</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Porcentagem: A Linguagem das Partes</h1>
+            <p>Aprenda a dominar o conceito que move as finanças mundiais e descubra como calcular descontos, juros e estatísticas de forma rápida e precisa.</p>
+        </header>
+
+        <section id="introducao">
+            <h2>1. Introdução e Contexto</h2>
+            <div class="img-container">
+                <p class="img-placeholder">[Sugestão de Imagem: Uma vitrine de shopping com grandes letras em vermelho anunciando '50% OFF', contrastada com a tela de um smartphone mostrando o rendimento de uma conta digital em porcentagem e um gráfico de bateria em 15%.]</p>
+                <span class="img-caption">A porcentagem é a razão mais famosa e utilizada do planeta.</span>
+            </div>
+            <p>Você já sentiu aquela pontada de dúvida ao ver um anúncio de "30% de desconto" e não saber exatamente quanto vai pagar no final? Ou já ficou preocupado ao ver que a bateria do seu celular está em "5%", sem saber quanto tempo de uso real você ainda tem? A <span class="destaque-term">Porcentagem</span> é a linguagem universal que usamos para descrever frações de um todo de uma maneira que todo mundo entenda instantaneamente. "Por cento" significa literalmente "por cada cem". É como se dividíssemos qualquer quantidade, seja um bolo, uma fortuna ou a população de um país, em 100 pedacinhos iguais para facilitar a comparação. Sem a porcentagem, seria impossível entender a economia, os impostos ou até mesmo a eficácia de uma vacina.</p>
+            <p>No mundo moderno, a porcentagem é o oxigênio da inteligência financeira. Quando você coloca dinheiro na poupança ou em um investimento, o que importa é a "taxa percentual" de rendimento; quando você faz um empréstimo, os "juros" são calculados como uma porcentagem do valor principal. Dominar esse conceito é o que separa as pessoas que perdem dinheiro com dívidas daquelas que fazem o dinheiro trabalhar para elas. Além das finanças, a porcentagem é a base da ciência de dados: ela nos diz a probabilidade de chover, a margem de erro de uma pesquisa eleitoral e até a proporção de nutrientes no rótulo de um alimento. É a ferramenta definitiva para interpretar as informações que bombardeiam nossos olhos todos os dias.</p>
+            <p>Nesta lição, vamos desvendar como converter porcentagens em frações e decimais (os famosos números com vírgula). Você aprenderá macetes mentais para calcular 10%, 20% e 50% de cabeça, economizando tempo no caixa do supermercado ou na hora de dividir a conta do restaurante. Vamos explorar situações de aumento e desconto sucessivos e aprender a usar a regra de três para resolver qualquer problema percentual complexo. Entender porcentagem é ganhar um "superpoder" de clareza mental, permitindo que você tome decisões baseadas em fatos numéricos e não apenas em impressões vagas. Prepare-se para ver o mundo em partes de cem e dominar seus resultados!</p>
+        </section>
+
+        <section id="teoria">
+            <h2>2. Teoria e Exemplos</h2>
+            <p>Porcentagem é uma razão cujo denominador é 100. O símbolo usado é **%**.</p>
+            
+            <h3>A. Formas de Representação</h3>
+            <ul>
+                <li><strong>Percentual:</strong> \( 25\% \)</li>
+                <li><strong>Fracionária:</strong> \( \frac{25}{100} = \frac{1}{4} \)</li>
+                <li><strong>Decimal:</strong> \( 0,25 \)</li>
+            </ul>
+            
+            <h3>B. Como Calcular</h3>
+            <p>Para calcular \( x\% \) de um valor \( V \), multiplicamos o valor pela forma decimal da porcentagem.</p>
+            <p><strong>Exemplo:</strong> 20% de R$ 80,00.
+            \[ 0,20 \times 80 = 16 \]</p>
+            
+            <h3>C. Aumento e Desconto</h3>
+            <ul>
+                <li><strong>Desconto:</strong> Valor Final = Valor Original \( \times (1 - i) \).</li>
+                <li><strong>Aumento:</strong> Valor Final = Valor Original \( \times (1 + i) \).</li>
+            </ul>
+            <p><em>(Onde 'i' é a taxa em decimal).</em></p>
+        </section>
+
+        <section id="mapa-mental">
+            <h2>3. Mapa Mental</h2>
+            <div class="mm-blogger-container">
+                <div class="mm-wrapper">
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Conceito: Parte de 100 <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A porcentagem padroniza todas as comparações para uma base centesimal. Isso remove a confusão de comparar frações com denominadores diferentes (como 3/7 e 5/8). Ao transformar tudo em 'por cento', criamos uma régua universal de percepção. 50% é sempre metade, independente se falamos de 10 reais ou 10 milhões. Essa clareza é o que permite a comunicação rápida de dados em notícias, relatórios empresariais e etiquetas de preços em todo o mundo.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Cálculos Mentais Rápidos <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Dominar macetes mentais é essencial para o dia a dia. Para achar 10%, basta 'andar' uma vírgula para a esquerda. Para 1%, ande duas. A partir daí, você monta qualquer valor: 20% é o dobro de 10%; 5% é a metade de 10%. Esses atalhos cognitivos dão agilidade nas compras e negociações, permitindo que você avalie o valor real de uma oferta instantaneamente, sem precisar de uma calculadora física para decisões simples de consumo.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mm-center"><h3>PORCENTAGEM</h3></div>
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Finanças e Juros <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">No sistema financeiro, a porcentagem dita o crescimento do dinheiro através dos juros. Sejam simples ou compostos, os juros são o 'aluguel' do dinheiro expresso em taxa percentual ao longo do tempo. Entender como essa taxa se aplica sobre o saldo devedor ou investido é a diferença entre a liberdade financeira e o endividamento crônico. É a matemática que governa cartões de crédito, financiamentos imobiliários e o rendimento da sua reserva de emergência.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Variações e Estatística <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A porcentagem é a ferramenta preferida da estatística para descrever mudanças. Quando ouvimos que a inflação 'subiu 2%' ou que a 'intenção de voto é de 40%', estamos usando porcentagem para resumir comportamentos complexos de massas de dados. Ela permite visualizar tendências de crescimento ou queda, margens de erro e probabilidades, transformando o caos de informações dispersas em insights estratégicos para governos, cientistas e investidores de mercado.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="atividades-mc">
+            <h2>4. Atividades: Múltipla Escolha</h2>
+            <div class="question" id="q1">
+                <p><span class="destaque-term">Questão 1:</span> Quanto é 15% de R$ 200,00?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q1', 'A', 'B')">A) R$ 15,00</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'B', 'B')">B) R$ 30,00</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'C', 'B')">C) R$ 45,00</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'D', 'B')">D) R$ 20,00</button>
+                </div>
+                <div class="feedback" id="fb-q1">Cálculo: \( 0,15 \times 200 = 30 \). Macete: 10% é 20, 5% é 10. \( 20 + 10 = 30 \).</div>
+            </div>
+            <div class="question" id="q2">
+                <p><span class="destaque-term">Questão 2:</span> Um produto de R$ 100,00 teve um aumento de 20%. Qual seu novo valor?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q2', 'A', 'A')">A) R$ 120,00</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'B', 'A')">B) R$ 80,00</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'C', 'A')">C) R$ 102,00</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'D', 'A')">D) R$ 140,00</button>
+                </div>
+                <div class="feedback" id="fb-q2">Cálculo: \( 100 + (0,20 \times 100) = 100 + 20 = 120 \).</div>
+            </div>
+            <div class="question" id="q3">
+                <p><span class="destaque-term">Questão 3:</span> Como representamos "metade de algo" em porcentagem?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q3', 'A', 'D')">A) 5%</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'B', 'D')">B) 10%</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'C', 'D')">C) 0,5%</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'D', 'D')">D) 50%</button>
+                </div>
+                <div class="feedback" id="fb-q3">Lógica: O total é 100%. Metade de 100 é 50. Logo, 50%.</div>
+            </div>
+        </section>
+
+        <section id="atividades-vf">
+            <h2>5. Atividades: Verdadeiro ou Falso</h2>
+            <div class="question" id="vf1">
+                <p><span class="destaque-term">1.</span> A porcentagem de 100% de um valor é sempre igual ao próprio valor original.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf1">Verdadeiro! 100% representa o todo, o inteiro (\( 100/100 = 1 \)).</div>
+            </div>
+            <div class="question" id="vf2">
+                <p><span class="destaque-term">2.</span> Para calcular 10% de um número, basta dividir esse número por 10.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf2">Verdadeiro! \( 10/100 = 1/10 \). Dividir por 10 é o atalho matemático para 10%.</div>
+            </div>
+            <div class="question" id="vf3">
+                <p><span class="destaque-term">3.</span> Um desconto de 50% seguido de outro desconto de 50% torna o produto gratuito (100% de desconto).</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'V', 'F')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'F', 'F')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf3">Falso! O segundo desconto incide sobre o NOVO valor (a metade). Metade da metade é 25%. O desconto total seria de 75%.</div>
+            </div>
+        </section>
+
+        <section id="flashcards">
+            <h2>6. Flashcards</h2>
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é 100%?</div><div class="flashcard-back">O total, o inteiro de algo.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é 50%?</div><div class="flashcard-back">A metade de algo.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é 25%?</div><div class="flashcard-back">A quarta parte de algo (metade da metade).</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Atalho p/ 10%?</div><div class="flashcard-back">Dividir o valor por 10.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Atalho p/ 1%?</div><div class="flashcard-back">Dividir o valor por 100.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Decimal de 20%?</div><div class="flashcard-back">0,20 ou 0,2.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Desconto?</div><div class="flashcard-back">Subtrair a parte percentual do total.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Juros?</div><div class="flashcard-back">Aumento percentual sobre um valor.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Cem por cento?</div><div class="flashcard-back">A tradução literal do símbolo %.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Taxa de inflação?</div><div class="flashcard-back">Aumento percentual médio dos preços.</div></div></div>
+            </div>
+        </section>
+
+        <section id="dicionario">
+            <h2>7. Dicionário</h2>
+            <div class="dict-item"><span class="dict-term">Abatimento:</span> Outro nome para desconto percentual aplicado sobre um preço.</div>
+            <div class="dict-item"><span class="dict-term">Acréscimo:</span> Valor somado ao original devido a uma taxa de aumento.</div>
+            <div class="dict-item"><span class="dict-term">Capital:</span> Valor original sobre o qual incide a taxa de porcentagem.</div>
+            <div class="dict-item"><span class="dict-term">Centesimal:</span> Que tem como base o número 100 (origem da porcentagem).</div>
+            <div class="dict-item"><span class="dict-term">Comissão:</span> Porcentagem paga a um vendedor sobre o valor da venda realizada.</div>
+            <div class="dict-item"><span class="dict-term">Decimal:</span> Forma numérica da porcentagem usada para cálculos diretos (ex: 0,15).</div>
+            <div class="dict-item"><span class="dict-term">Deflação:</span> Queda percentual média dos preços em um determinado período.</div>
+            <div class="dict-item"><span class="dict-term">Desconto:</span> Redução percentual do valor de um produto ou serviço.</div>
+            <div class="dict-item"><span class="dict-term">Dividendo:</span> Parte do lucro de uma empresa distribuída aos acionistas em porcentagem.</div>
+            <div class="dict-item"><span class="dict-term">Fator:</span> Número pelo qual multiplicamos para aplicar aumento ou desconto (ex: 1,10 para +10%).</div>
+            <div class="dict-item"><span class="dict-term">Inflação:</span> Aumento percentual médio e contínuo dos preços na economia.</div>
+            <div class="dict-item"><span class="dict-term">Juros:</span> Remuneração pelo uso do dinheiro, expressa em taxa percentual.</div>
+            <div class="dict-item"><span class="dict-term">Lucro:</span> Porcentagem de ganho obtida sobre o custo de produção ou compra.</div>
+            <div class="dict-item"><span class="dict-term">Porcentagem:</span> Medida de uma porção em relação a um todo dividido em 100 partes.</div>
+            <div class="dict-item"><span class="dict-term">Taxa:</span> O valor percentual propriamente dito (o número que acompanha o %).</div>
+        </section>
+
+        <section id="materiais">
+            <h2>8. Materials Complementares</h2>
+            <ul>
+                <li><a href="https://pt.khanacademy.org/math/arithmetic/arith-review-ratios-percentages/arith-review-percentages" target="_blank">Khan Academy: Porcentagem</a> - Do básico ao avançado.</li>
+                <li><a href="https://www.youtube.com/watch?v=porcentagem-do-zero-rapido" target="_blank">Vídeo: Aprenda Porcentagem de Cabeça</a> - Macetes mentais.</li>
+                <li><a href="https://www.bcb.gov.br/cidadaniafinanceira/calculadora-do-cidadao" target="_blank">Calculadora do Cidadão (BCB)</a> - Ferramenta oficial para juros e inflação.</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+    // Função para múltipla escolha e V/F
+    function checkAnswer(questionId, selected, correct) {
+        let fbDiv = document.getElementById('fb-' + questionId);
+        if (!fbDiv) return;
+        if (selected === correct) {
+            fbDiv.classList.add('correct');
+            fbDiv.classList.remove('incorrect');
+        } else {
+            fbDiv.classList.add('incorrect');
+            fbDiv.classList.remove('correct');
+        }
+        fbDiv.style.display = 'block';
+        fbDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Inicialização do mapa mental (expansão dos nós)
+    (function() {
+        const nodes = document.querySelectorAll('.mm-node');
+        if (nodes.length === 0) return;
+        nodes.forEach(node => {
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isActive = this.classList.contains('active');
+                nodes.forEach(n => {
+                    n.classList.remove('active');
+                    const icon = n.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '+';
+                    n.style.zIndex = '10';
+                });
+                if (!isActive) {
+                    this.classList.add('active');
+                    this.style.zIndex = '100';
+                    const icon = this.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '-';
+                }
+            });
+        });
+        document.addEventListener('click', function() {
+            nodes.forEach(n => {
+                n.classList.remove('active');
+                const icon = n.querySelector('.mm-icon');
+                if (icon) icon.textContent = '+';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

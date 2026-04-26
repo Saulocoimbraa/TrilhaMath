@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Números Reais: A Fronteira da Medida - TrilhaMath</title>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #ED7C3A;
+            --secondary: #2f4887;
+            --dark: #1F2937;
+            --light: #F3F4F6;
+            --danger: #EF4444;
+            --bg-body: #ffffff;
+        }
+
+        /* Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-logo {
+            height: 30px;
+            mix-blend-mode: multiply;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+        .nav-btn-next {
+            background: var(--primary);
+            color: white !important;
+        }
+        .nav-btn-next:hover {
+            background: #d35400 !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(237, 124, 58, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            padding: 80px 0 0 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 0.1rem;
+            margin-bottom: 2rem;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--primary) !important;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+        }
+
+        .destaque-term {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Mapa Mental */
+        .mm-blogger-container {
+            background-color: #f1f5f9;
+            padding: 40px 10px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .mm-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .mm-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .mm-center {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border-left: 6px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .mm-node-wrapper {
+            flex: 0 1 220px;
+            position: relative;
+            min-height: 50px;
+        }
+
+        .mm-node {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .mm-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .mm-node.active {
+            position: absolute;
+            width: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .mm-node-header {
+            padding: 12px 15px;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .mm-node.active .mm-node-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mm-node-content {
+            padding: 0;
+            max-height: 0;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .mm-node.active .mm-node-content {
+            padding: 15px;
+            max-height: 400px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .mm-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        /* Quiz & VF */
+        .question {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        button.option-btn,
+        button.vf-btn {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        button.option-btn:hover,
+        button.vf-btn:hover {
+            border-color: var(--primary);
+            background: #fffaf0;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #D1FAE5;
+            color: #065F46;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #FEE2E2;
+            color: #991B1B;
+            display: block;
+        }
+
+        /* Flashcards */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .flashcard {
+            background: transparent;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flip .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background-color: white;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            font-weight: bold;
+        }
+
+        .flashcard-back {
+            background-color: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Dictionary */
+        .dict-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+
+        .dict-term {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .img-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d1d5db;
+        }
+
+        .img-placeholder {
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .mm-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .mm-node.active {
+                width: 100%;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="../../index.html" class="nav-link">Início</a>
+        </div>
+        <img src="../../assets/logo-horizontal.png" alt="TrilhaMath" class="nav-logo">
+        <div class="nav-right">
+            <a href="leitura_gráficos.html" class="nav-link nav-btn-next">Avançar</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Números Reais: A Fronteira da Medida</h1>
+            <p>Descubra o conjunto numérico que preenche todos os vazios da régua e aprenda a lidar com as medidas infinitas que descrevem a beleza e a precisão do universo.</p>
+        </header>
+
+        <section id="introducao">
+            <h2>1. Introdução e Contexto</h2>
+            <div class="img-container">
+                <p class="img-placeholder">[Sugestão de Imagem: Uma régua de alta precisão sobreposta a uma espiral de caracol (proporção áurea) e um círculo perfeito destacando o valor de Pi (3,1415...). Ao fundo, um fractal complexo representando a continuidade infinita.]</p>
+                <span class="img-caption">O conjunto dos Reais é o preenchimento completo da reta numérica.</span>
+            </div>
+            <p>Você já tentou medir o comprimento exato da diagonal de um quadrado de lado 1 metro? Se usar uma régua comum, encontrará algo em torno de 1,41m. Mas se usar um laser ultra-preciso, verá 1,41421... e as casas decimais nunca terminam, nem se repetem. Esse número "estranho" é a raiz quadrada de 2, um exemplo de número irracional. Para que a matemática pudesse descrever todas as medidas possíveis do mundo físico — desde o diâmetro de um átomo até a circunferência de um planeta — foi necessário unir todos os números conhecidos em um único e gigante conjunto: os <span class="destaque-term">Números Reais</span>. Eles são a matéria-prima da continuidade, garantindo que não existam "buracos" na linha que usamos para medir o tempo e o espaço.</p>
+            <p>No cotidiano, os números reais são os pilares da tecnologia e da arte. O número \( \pi \) (Pi), um dos reais mais famosos, está presente em cada pneu de carro, em cada antena de satélite e em cada projeto de engenharia que envolva curvas. Sem a precisão dos números reais, o seu GPS não conseguiria te localizar com metros de erro, pois os cálculos de triangulação exigem uma precisão decimal que os números inteiros ou frações simples não alcançam. Até na música, as frequências das notas em um piano seguem uma proporção baseada em números irracionais para que a afinação soe harmoniosa aos nossos ouvidos. Entender os reais é entender que o universo não é feito apenas de contagens discretas, mas de um fluxo contínuo e infinito de medidas.</p>
+            <p>Nesta lição, vamos explorar a arquitetura dos Reais, vendo como eles englobam os Naturais, Inteiros, Racionais e os misteriosos Irracionais. Você aprenderá a localizar qualquer número real na reta numérica e entenderá por que entre dois números reais existem infinitos outros. Vamos desmistificar as dízimas periódicas e não periódicas e aprender as propriedades que permitem realizar operações complexas com raízes e potências. Dominar os números reais é como ganhar um microscópio matemático, permitindo que você enxergue a precisão absoluta escondida nos detalhes da natureza e da tecnologia. Prepare-se para caminhar pela reta numérica sem nunca encontrar o fim!</p>
+        </section>
+
+        <section id="teoria">
+            <h2>2. Teoria e Exemplos</h2>
+            <p>O conjunto dos Números Reais (\( \mathbb{R} \)) é a união dos números Racionais (\( \mathbb{Q} \)) com os números Irracionais (\( \mathbb{I} \)).</p>
+            
+            <h3>A. A Hierarquia Numérica</h3>
+            <ul>
+                <li><strong>Naturais (\( \mathbb{N} \)):</strong> \( 0, 1, 2, 3... \) (Contagem).</li>
+                <li><strong>Inteiros (\( \mathbb{Z} \)):</strong> \( ...-2, -1, 0, 1, 2... \) (Dívidas e contagem).</li>
+                <li><strong>Racionais (\( \mathbb{Q} \)):</strong> Frações, decimais exatos e dízimas periódicas (ex: \( 0,333... \)).</li>
+                <li><strong>Irracionais (\( \mathbb{I} \)):</strong> Decimais infinitos e não periódicos (ex: \( \pi, \sqrt{2}, e \)).</li>
+            </ul>
+            
+            <h3>B. Reta Numérica Real</h3>
+            <p>Diferente dos outros conjuntos, os Reais preenchem <strong>completamente</strong> a reta. Não há "espaços vazios" entre um número e outro.</p>
+            
+            <h3>C. Propriedades Importantes</h3>
+            <p>Qualquer operação de adição, subtração ou multiplicação entre dois reais resulta sempre em um número real (Propriedade do Fechamento).</p>
+        </section>
+
+        <section id="mapa-mental">
+            <h2>3. Mapa Mental</h2>
+            <div class="mm-blogger-container">
+                <div class="mm-wrapper">
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Racionais vs Irracionais <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">A grande divisão dos reais. Racionais são os previsíveis: terminam ou se repetem em ciclos. Irracionais são os caóticos e infinitos: suas casas decimais nunca formam um padrão. Essa dualidade reflete a própria natureza, onde temos eventos cíclicos e medíveis (como as horas) e fenômenos contínuos e complexos (como o fluxo da água ou a curvatura de uma lente). Compreender essa diferença é fundamental para cientistas que precisam decidir o nível de precisão necessário em cada experimento.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Dízimas e Precisão <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">As dízimas periódicas (racionais) podem ser transformadas em frações exatas, enquanto as não periódicas (irracionais) exigem arredondamentos na prática. No mundo da computação, essa distinção dita como os processadores armazenam informações. Erros de arredondamento em números reais podem causar falhas em softwares de engenharia ou finanças. Aprender a lidar com a precisão decimal é o que diferencia um técnico comum de um especialista capaz de gerenciar sistemas complexos de alta confiabilidade.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mm-center"><h3>NÚMEROS REAIS</h3></div>
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Densidade da Reta <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">O conjunto dos reais é 'denso'. Isso significa que entre 1 e 2 existem infinitos números. Essa característica é a base do Cálculo Diferencial e Integral, que estuda variações infinitamente pequenas. Na prática, a densidade dos reais permite que o som digital (MP3) seja tão próximo do som real, preenchendo as lacunas de informação com uma amostragem numérica tão fina que o ouvido humano não consegue distinguir a digitalização da realidade física original do áudio.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Aplicações na Física <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Os números reais são a linguagem oficial das leis da física. Da constante da gravidade ao número de Euler (e) no crescimento biológico, a realidade se expressa através de medidas que exigem o conjunto R. Entender esses números permite que engenheiros aeroespaciais calculem órbitas com segurança ou que médicos analisem a taxa de absorção de medicamentos. Sem os reais, a ciência seria limitada a descrições aproximadas e rudes, perdendo a capacidade de prever e controlar o mundo microscópico e macroscópico.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="atividades-mc">
+            <h2>4. Atividades: Múltipla Escolha</h2>
+            <div class="question" id="q1">
+                <p><span class="destaque-term">Questão 1:</span> Qual dos números abaixo é considerado um número IRRACIONAL?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q1', 'A', 'D')">A) 0,75</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'B', 'D')">B) -5</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'C', 'D')">C) 1/3</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'D', 'D')">D) Raiz quadrada de 3</button>
+                </div>
+                <div class="feedback" id="fb-q1">Análise: \(\sqrt{3}\) resulta em um decimal infinito e não periódico (\(1,73205...\)), impossível de escrever como fração de inteiros.</div>
+            </div>
+            <div class="question" id="q2">
+                <p><span class="destaque-term">Questão 2:</span> O conjunto dos Números Reais é formado pela união de quais grupos?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q2', 'A', 'B')">A) Naturais e Inteiros apenas</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'B', 'B')">B) Racionais e Irracionais</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'C', 'B')">C) Apenas números positivos</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'D', 'B')">D) Inteiros e Irracionais</button>
+                </div>
+                <div class="feedback" id="fb-q2">Teoria: R representa a união de todos os números que podem ser medidos na reta numérica.</div>
+            </div>
+            <div class="question" id="q3">
+                <p><span class="destaque-term">Questão 3:</span> O número Pi (\(\pi\)) é aproximadamente 3,14. Sobre ele, é correto afirmar:</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q3', 'A', 'C')">A) É um número inteiro</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'B', 'C')">B) É uma dízima periódica</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'C', 'C')">C) É um número real irracional</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'D', 'C')">D) Pode ser escrito como 314/100 exatamente</button>
+                </div>
+                <div class="feedback" id="fb-q3">Fato: Pi tem infinitas casas decimais sem repetição de padrão. 3,14 é apenas um arredondamento prático.</div>
+            </div>
+        </section>
+
+        <section id="atividades-vf">
+            <h2>5. Atividades: Verdadeiro ou Falso</h2>
+            <div class="question" id="vf1">
+                <p><span class="destaque-term">1.</span> Todo número natural é também um número real.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf1">Verdadeiro! O conjunto R contém todos os outros (N, Z, Q).</div>
+            </div>
+            <div class="question" id="vf2">
+                <p><span class="destaque-term">2.</span> Entre os números reais 2 e 3, não existe nenhum outro número real.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'V', 'F')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'F', 'F')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf2">Falso! Existem infinitos números (2,1; 2,01; 2,555...; \(\sqrt{5}\); etc) entre quaisquer dois reais.</div>
+            </div>
+            <div class="question" id="vf3">
+                <p><span class="destaque-term">3.</span> O número zero pertence ao conjunto dos Números Reais.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf3">Verdadeiro! Zero é um número racional e, portanto, também é real.</div>
+            </div>
+        </section>
+
+        <section id="flashcards">
+            <h2>6. Flashcards</h2>
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Símbolo dos Reais?</div><div class="flashcard-back">A letra R com barra dupla (ℝ).</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é Irracional?</div><div class="flashcard-back">Número decimal infinito e não periódico.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Pi (π)?</div><div class="flashcard-back">Irracional famoso (~3,1415...).</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Dízima Periódica?</div><div class="flashcard-back">Decimal infinito que se repete (é Racional).</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Reta Real?</div><div class="flashcard-back">Linha contínua onde cada ponto é um número R.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Racional?</div><div class="flashcard-back">Todo número que pode ser fração (a/b).</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Densidade?</div><div class="flashcard-back">Propriedade de haver infinitos números entre dois Reais.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">√2?</div><div class="flashcard-back">Número irracional (~1,414...).</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Inteiros?</div><div class="flashcard-back">Números positivos, negativos e o zero.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">União R?</div><div class="flashcard-back">Racionais + Irracionais.</div></div></div>
+            </div>
+        </section>
+
+        <section id="dicionario">
+            <h2>7. Dicionário</h2>
+            <div class="dict-item"><span class="dict-term">Abstração:</span> Processo de pensar nos números além de objetos físicos contáveis.</div>
+            <div class="dict-item"><span class="dict-term">Continuidade:</span> Característica da reta real que não possui interrupções ou vazios.</div>
+            <div class="dict-item"><span class="dict-term">Cálculo:</span> Ramo da matemática que utiliza as propriedades dos reais para estudar variações.</div>
+            <div class="dict-item"><span class="dict-term">Denso:</span> Conjunto onde sempre existe um elemento entre dois outros quaisquer.</div>
+            <div class="dict-item"><span class="dict-term">Decimal:</span> Forma de escrever números reais usando vírgula e potências de 10.</div>
+            <div class="dict-item"><span class="dict-term">Dízima:</span> Número decimal com infinitas casas após a vírgula.</div>
+            <div class="dict-item"><span class="dict-term">Euler (e):</span> Número irracional fundamental no estudo de logaritmos e crescimento (\( \approx 2,71 \)).</div>
+            <div class="dict-item"><span class="dict-term">Fração:</span> Representação de um número racional como divisão de dois inteiros.</div>
+            <div class="dict-item"><span class="dict-term">Infinito:</span> Conceito de algo que não tem fim, presente nas casas decimais dos irracionais.</div>
+            <div class="dict-item"><span class="dict-term">Irracional:</span> Número real que não pode ser expresso como uma razão entre dois inteiros.</div>
+            <div class="dict-item"><span class="dict-term">Não-periódico:</span> Sequência de números que não segue um padrão repetitivo.</div>
+            <div class="dict-item"><span class="dict-term">Pi (π):</span> Razão entre a circunferência de um círculo e seu diâmetro.</div>
+            <div class="dict-item"><span class="dict-term">Precisão:</span> Nível de detalhamento decimal usado em medições reais e cálculos.</div>
+            <div class="dict-item"><span class="dict-term">Racional:</span> Qualquer número real que pode ser escrito como \( a/b \), com \( b \neq 0 \).</div>
+            <div class="dict-item"><span class="dict-term">Reta Numérica:</span> Representação geométrica de todos os números de um conjunto.</div>
+        </section>
+
+        <section id="materiais">
+            <h2>8. Materials Complementares</h2>
+            <ul>
+                <li><a href="https://pt.khanacademy.org/math/algebra/x2f8bb11595b61c86:rational-and-irrational-numbers" target="_blank">Khan Academy: Racionais e Irracionais</a> - Exercícios de classificação.</li>
+                <li><a href="https://www.youtube.com/watch?v=conjunto-dos-numeros-reais" target="_blank">Vídeo: A Árvore dos Números</a> - Entenda a hierarquia dos conjuntos.</li>
+                <li><a href="https://www.infoescola.com/matematica/numeros-reais/" target="_blank">InfoEscola: Artigo sobre Números Reais</a> - Teoria e axiomas matemáticos.</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+    // Função para múltipla escolha e V/F
+    function checkAnswer(questionId, selected, correct) {
+        let fbDiv = document.getElementById('fb-' + questionId);
+        if (!fbDiv) return;
+        if (selected === correct) {
+            fbDiv.classList.add('correct');
+            fbDiv.classList.remove('incorrect');
+        } else {
+            fbDiv.classList.add('incorrect');
+            fbDiv.classList.remove('correct');
+        }
+        fbDiv.style.display = 'block';
+        fbDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Inicialização do mapa mental (expansão dos nós)
+    (function() {
+        const nodes = document.querySelectorAll('.mm-node');
+        if (nodes.length === 0) return;
+        nodes.forEach(node => {
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isActive = this.classList.contains('active');
+                nodes.forEach(n => {
+                    n.classList.remove('active');
+                    const icon = n.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '+';
+                    n.style.zIndex = '10';
+                });
+                if (!isActive) {
+                    this.classList.add('active');
+                    this.style.zIndex = '100';
+                    const icon = this.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '-';
+                }
+            });
+        });
+        document.addEventListener('click', function() {
+            nodes.forEach(n => {
+                n.classList.remove('active');
+                const icon = n.querySelector('.mm-icon');
+                if (icon) icon.textContent = '+';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

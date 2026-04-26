@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Múltiplos e Divisores: A Dança dos Números - TrilhaMath</title>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #ED7C3A;
+            --secondary: #2f4887;
+            --dark: #1F2937;
+            --light: #F3F4F6;
+            --danger: #EF4444;
+            --bg-body: #ffffff;
+        }
+
+        /* Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-logo {
+            height: 30px;
+            mix-blend-mode: multiply;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+        .nav-btn-next {
+            background: var(--primary);
+            color: white !important;
+        }
+        .nav-btn-next:hover {
+            background: #d35400 !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(237, 124, 58, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            padding: 80px 0 0 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 0.1rem;
+            margin-bottom: 2rem;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--primary) !important;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+        }
+
+        .destaque-term {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Mapa Mental */
+        .mm-blogger-container {
+            background-color: #f1f5f9;
+            padding: 40px 10px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .mm-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .mm-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .mm-center {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border-left: 6px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .mm-node-wrapper {
+            flex: 0 1 220px;
+            position: relative;
+            min-height: 50px;
+        }
+
+        .mm-node {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .mm-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .mm-node.active {
+            position: absolute;
+            width: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .mm-node-header {
+            padding: 12px 15px;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .mm-node.active .mm-node-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mm-node-content {
+            padding: 0;
+            max-height: 0;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .mm-node.active .mm-node-content {
+            padding: 15px;
+            max-height: 400px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .mm-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        /* Quiz & VF */
+        .question {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        button.option-btn,
+        button.vf-btn {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        button.option-btn:hover,
+        button.vf-btn:hover {
+            border-color: var(--primary);
+            background: #fffaf0;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #D1FAE5;
+            color: #065F46;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #FEE2E2;
+            color: #991B1B;
+            display: block;
+        }
+
+        /* Flashcards */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .flashcard {
+            background: transparent;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flip .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background-color: white;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            font-weight: bold;
+        }
+
+        .flashcard-back {
+            background-color: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Dictionary */
+        .dict-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+
+        .dict-term {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .img-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d1d5db;
+        }
+
+        .img-placeholder {
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .mm-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .mm-node.active {
+                width: 100%;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="../../index.html" class="nav-link">Início</a>
+        </div>
+        <img src="../../assets/logo-horizontal.png" alt="TrilhaMath" class="nav-logo">
+        <div class="nav-right">
+            <a href="numeros_inteiros.html" class="nav-link nav-btn-next">Avançar</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Múltiplos e Divisores: A Dança dos Números</h1>
+            <p>Entenda os ritmos da matemática e como os números se conectam através de padrões de repetição e partilha.</p>
+        </header>
+
+        <section id="introducao">
+            <h2>1. Introdução e Contexto</h2>
+            <div class="img-container">
+                <p class="img-placeholder">[Sugestão de Imagem: Um relógio marcando horas, um calendário e uma linha de montagem de fábrica, ilustrando ciclos que se repetem e divisões de tempo/tarefas.]</p>
+                <span class="img-caption">Padrões numéricos governam os ciclos da nossa vida.</span>
+            </div>
+            <p>Você já notou que o mundo ao seu redor segue ritmos matemáticos precisos? Pense nos semáforos de uma avenida: eles abrem e fecham em intervalos de tempo constantes. Ou nas fases da lua, que se repetem a cada 28 dias. Até mesmo os compromissos da sua agenda, como ir à academia a cada 2 dias ou pagar uma conta todo dia 5, seguem uma lógica de repetição. Essa "pulsação" numérica é o que chamamos de <span class="destaque-term">Múltiplos e Divisores</span>. Eles são os responsáveis por organizar os ciclos da natureza, da tecnologia e da nossa rotina social, permitindo que possamos prever encontros e organizar grandes sistemas.</p>
+            <p>Imagine que você trabalha em uma linha de produção onde uma peça é finalizada a cada 4 minutos. Saber os múltiplos de 4 ajudará você a prever exatamente quantas peças estarão prontas em uma hora. Agora, pense em um confeiteiro que precisa dividir uma fornada de 48 biscoitos em pacotes iguais: ele precisa encontrar os divisores de 48 para que nenhum biscoito sobre e as embalagens fiquem perfeitas. Sem esse entendimento, a organização logística de eventos, a distribuição de recursos e até o funcionamento de redes de computadores (que usam múltiplos para enviar pacotes de dados) seriam um completo caos.</p>
+            <p>Nesta lição, vamos mergulhar na beleza desses padrões. Você vai descobrir que os números não são apenas símbolos estáticos, mas entidades que "conversam" entre si através de laços de parentesco matemático. Aprenderemos a identificar quando um número "cabe" perfeitamente dentro de outro e como encontrar os pontos de encontro comuns entre diferentes ritmos numéricos. Essa habilidade é fundamental não apenas para as aulas de matemática, mas para desenvolver um pensamento estratégico capaz de otimizar processos, economizar tempo e resolver problemas de logística com a maestria de um mestre dos números. Prepare-se para ver o mundo como uma grande sinfonia de múltiplos e divisores!</p>
+        </section>
+
+        <section id="teoria">
+            <h2>2. Teoria e Exemplos</h2>
+            <p>Para dominar este tópico, precisamos diferenciar claramente dois conceitos que andam juntos, mas em direções opostas:</p>
+            
+            <h3>A. Múltiplos: A Expansão</h3>
+            <p>Dizemos que um número é <span class="destaque-term">Múltiplo</span> de outro quando ele é o resultado da multiplicação desse número por qualquer número inteiro. É como se fosse a "tabuada" infinita daquele valor.
+            \[ M(5) = \{0, 5, 10, 15, 20, 25, \dots\} \]</p>
+            <p><strong>Exemplo Real:</strong> Se um ônibus passa no ponto a cada 15 minutos, os horários de passagem (em minutos) são os múltiplos de 15: 0, 15, 30, 45, 60...</p>
+            
+            <h3>B. Divisores: A Fragmentação</h3>
+            <p>Um número é <span class="destaque-term">Divisor</span> de outro quando a divisão entre eles é exata (resto zero). Os divisores são limitados; eles sempre começam no 1 e terminam no próprio número.
+            \[ D(12) = \{1, 2, 3, 4, 6, 12\} \]</p>
+            <p><strong>Exemplo Real:</strong> Se você tem 12 bombons e quer dividir em grupos iguais sem sobrar nada, as únicas quantidades de grupos possíveis são os divisores de 12.</p>
+
+            <h3>C. Números Primos</h3>
+            <p>São números especiais que possuem exatamente dois divisores: o 1 e eles mesmos. Eles são os "átomos" da matemática, pois todos os outros números são formados por eles através da multiplicação. Ex: \( 2, 3, 5, 7, 11, 13, \dots \)</p>
+        </section>
+
+        <section id="mapa-mental">
+            <h2>3. Mapa Mental</h2>
+            <div class="mm-blogger-container">
+                <div class="mm-wrapper">
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Múltiplos <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Representam a ideia de crescimento e repetição infinita. Para encontrar os múltiplos de um número 'n', basta multiplicá-lo pela sequência de números naturais (0, 1, 2, 3...). O zero é o múltiplo universal de todos os números. Na prática cotidiana, os múltiplos são usados para calcular intervalos de tempo em calendários, frequências de eventos astronômicos e o funcionamento de batimentos cardíacos ou engrenagens de máquinas que precisam de sincronia perfeita para operar.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Divisores <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">Representam a ideia de partilha exata e fragmentação organizada de um todo. Um número é divisor quando a divisão resulta em um quociente inteiro e resto zero. Diferente dos múltiplos, o conjunto de divisores de um número é sempre finito e limitado. O número 1 é o divisor universal de qualquer número inteiro. Usamos divisores para organizar estoques, distribuir tarefas em equipes de forma equitativa e na criação de embalagens que comportem quantidades padronizadas de produtos.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mm-center"><h3>MÚLTIPLOS E DIVISORES</h3></div>
+                    <div class="mm-row">
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Números Primos <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">São os blocos fundamentais de construção de todos os números. Um número primo possui apenas dois divisores distintos: a unidade (1) e ele próprio. O único número primo que é par é o 2. Eles são vitais para a segurança digital moderna, sendo a base dos algoritmos de criptografia que protegem suas senhas bancárias e mensagens de aplicativos. Todo número composto pode ser decomposto em um produto único de fatores primos, um processo conhecido como fatoração.</div>
+                            </div>
+                        </div>
+                        <div class="mm-node-wrapper">
+                            <div class="mm-node">
+                                <div class="mm-node-header">Critérios de Div. <span class="mm-icon">+</span></div>
+                                <div class="mm-node-content">São "atalhos" mentais que permitem descobrir se um número é divisor de outro sem precisar realizar a conta de divisão completa. Por exemplo, um número é divisível por 2 se for par; é divisível por 3 se a soma de seus algarismos for um múltiplo de 3; e é divisível por 5 se terminar em 0 ou 5. Dominar esses critérios economiza tempo precioso em cálculos complexos e ajuda a simplificar frações e resolver problemas de lógica com muito mais agilidade no dia a dia.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="atividades-mc">
+            <h2>4. Atividades: Múltipla Escolha</h2>
+            <div class="question" id="q1">
+                <p><span class="destaque-term">Questão 1:</span> Três luzes de emergência piscam em intervalos diferentes: a primeira a cada 4 segundos, a segunda a cada 6 segundos e a terceira a cada 10 segundos. Se elas piscaram juntas agora, após quantos segundos elas voltarão a piscar simultaneamente?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q1', 'A', 'B')">A) 30 segundos</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'B', 'B')">B) 60 segundos</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'C', 'B')">C) 120 segundos</button>
+                    <button class="option-btn" onclick="checkAnswer('q1', 'D', 'B')">D) 24 segundos</button>
+                </div>
+                <div class="feedback" id="fb-q1">Cálculo: Devemos encontrar o Mínimo Múltiplo Comum (MMC) de 4, 6 e 10. MMC(4,6,10) = 60. Elas piscarão juntas em 1 minuto.</div>
+            </div>
+            <div class="question" id="q2">
+                <p><span class="destaque-term">Questão 2:</span> Um buffet recebeu uma encomenda de 120 salgadinhos e 180 docinhos. O cliente quer que eles sejam colocados em bandejas de modo que todas tenham a mesma quantidade total de itens, sem misturar salgados com doces e usando o maior número possível de itens por bandeja. Qual essa quantidade?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q2', 'A', 'C')">A) 30 itens</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'B', 'C')">B) 40 itens</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'C', 'C')">C) 60 itens</button>
+                    <button class="option-btn" onclick="checkAnswer('q2', 'D', 'C')">D) 20 itens</button>
+                </div>
+                <div class="feedback" id="fb-q2">Cálculo: Devemos encontrar o Máximo Divisor Comum (MDC) de 120 e 180. MDC(120, 180) = 60.</div>
+            </div>
+            <div class="question" id="q3">
+                <p><span class="destaque-term">Questão 3:</span> Qual dos números abaixo é considerado um número primo?</p>
+                <div class="options">
+                    <button class="option-btn" onclick="checkAnswer('q3', 'A', 'D')">A) 15</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'B', 'D')">B) 21</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'C', 'D')">C) 27</button>
+                    <button class="option-btn" onclick="checkAnswer('q3', 'D', 'D')">D) 31</button>
+                </div>
+                <div class="feedback" id="fb-q3">Análise: 15 (3x5), 21 (3x7), 27 (3x9) são compostos. 31 possui apenas os divisores 1 e 31.</div>
+            </div>
+        </section>
+
+        <section id="atividades-vf">
+            <h2>5. Atividades: Verdadeiro ou Falso</h2>
+            <div class="question" id="vf1">
+                <p><span class="destaque-term">1.</span> O número 1 é considerado um número primo pois só pode ser dividido por ele mesmo.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'V', 'F')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf1', 'F', 'F')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf1">Falso! Por definição, números primos devem ter EXATAMENTE dois divisores distintos. O 1 tem apenas um.</div>
+            </div>
+            <div class="question" id="vf2">
+                <p><span class="destaque-term">2.</span> Todo número par maior que 2 é um número composto.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf2', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf2">Verdadeiro! Pois além de 1 e dele mesmo, ele será obrigatoriamente divisível por 2.</div>
+            </div>
+            <div class="question" id="vf3">
+                <p><span class="destaque-term">3.</span> O conjunto dos múltiplos de um número natural diferente de zero é infinito.</p>
+                <div class="options" style="flex-direction: row;">
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'V', 'V')">Verdadeiro</button>
+                    <button class="vf-btn" onclick="checkAnswer('vf3', 'F', 'V')">Falso</button>
+                </div>
+                <div class="feedback" id="fb-vf3">Verdadeiro! Podemos multiplicar um número por infinitos outros números naturais.</div>
+            </div>
+        </section>
+
+        <section id="flashcards">
+            <h2>6. Flashcards</h2>
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é MDC?</div><div class="flashcard-back">Máximo Divisor Comum.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">O que é MMC?</div><div class="flashcard-back">Mínimo Múltiplo Comum.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Único primo par?</div><div class="flashcard-back">O número 2.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Divisor de todos?</div><div class="flashcard-back">O número 1.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Múltiplo de todos?</div><div class="flashcard-back">O número 0.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Divisível por 5?</div><div class="flashcard-back">Termina em 0 ou 5.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Número Primo?</div><div class="flashcard-back">Tem apenas 2 divisores.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Número Composto?</div><div class="flashcard-back">Tem mais de 2 divisores.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Divisível por 2?</div><div class="flashcard-back">Se o número for par.</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flip')"><div class="flashcard-inner"><div class="flashcard-front">Fatoração?</div><div class="flashcard-back">Decompor em números primos.</div></div></div>
+            </div>
+        </section>
+
+        <section id="dicionario">
+            <h2>7. Dicionário</h2>
+            <div class="dict-item"><span class="dict-term">Algoritmo:</span> Sequência de passos lógicos para resolver um problema de cálculo.</div>
+            <div class="dict-item"><span class="dict-term">Composto:</span> Número que possui mais de dois divisores distintos.</div>
+            <div class="dict-item"><span class="dict-term">Criptografia:</span> Técnica de proteção de dados que utiliza números primos gigantes.</div>
+            <div class="dict-item"><span class="dict-term">Critério:</span> Regra que permite verificar uma propriedade sem cálculos longos.</div>
+            <div class="dict-item"><span class="dict-term">Decomposição:</span> Ato de quebrar um número em partes menores (fatores).</div>
+            <div class="dict-item"><span class="dict-term">Divisibilidade:</span> Propriedade de um número ser dividido por outro sem deixar resto.</div>
+            <div class="dict-item"><span class="dict-term">Divisor:</span> Número que divide outro de forma exata.</div>
+            <div class="dict-item"><span class="dict-term">Exatidão:</span> Quando o resto de uma operação de divisão é igual a zero.</div>
+            <div class="dict-item"><span class="dict-term">Fator:</span> Cada um dos números que, multiplicados, resultam em um produto.</div>
+            <div class="dict-item"><span class="dict-term">Finito:</span> Conjunto que possui um fim, como os divisores de um número.</div>
+            <div class="dict-item"><span class="dict-term">Infinito:</span> Conjunto que não possui fim, como os múltiplos de um número.</div>
+            <div class="dict-item"><span class="dict-term">MDC:</span> O maior número que divide dois ou mais valores simultaneamente.</div>
+            <div class="dict-item"><span class="dict-term">MMC:</span> O menor valor positivo que é múltiplo comum de dois ou mais números.</div>
+            <div class="dict-item"><span class="dict-term">Múltiplo:</span> Produto de um número por qualquer número inteiro.</div>
+            <div class="dict-item"><span class="dict-term">Primo:</span> Número natural maior que 1 que possui apenas dois divisores.</div>
+        </section>
+
+        <section id="materiais">
+            <h2>8. Materiais Complementares</h2>
+            <ul>
+                <li><a href="https://pt.khanacademy.org/math/pre-algebra/pre-algebra-factors-multiples" target="_blank">Khan Academy: Fatores e Múltiplos</a> - Prática interativa detalhada.</li>
+                <li><a href="https://www.youtube.com/watch?v=primos-criptografia" target="_blank">Vídeo: Como os Números Primos Protegem sua Internet</a> - Aplicação real.</li>
+                <li><a href="https://nrich.maths.org/prime-puzzles" target="_blank">NRICH: Prime Puzzles</a> - Desafios e quebra-cabeças com números primos (em inglês).</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+    // Função para múltipla escolha e V/F
+    function checkAnswer(questionId, selected, correct) {
+        let fbDiv = document.getElementById('fb-' + questionId);
+        if (!fbDiv) return;
+        if (selected === correct) {
+            fbDiv.classList.add('correct');
+            fbDiv.classList.remove('incorrect');
+        } else {
+            fbDiv.classList.add('incorrect');
+            fbDiv.classList.remove('correct');
+        }
+        fbDiv.style.display = 'block';
+        fbDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Inicialização do mapa mental (expansão dos nós)
+    (function() {
+        const nodes = document.querySelectorAll('.mm-node');
+        if (nodes.length === 0) return;
+        nodes.forEach(node => {
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isActive = this.classList.contains('active');
+                nodes.forEach(n => {
+                    n.classList.remove('active');
+                    const icon = n.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '+';
+                    n.style.zIndex = '10';
+                });
+                if (!isActive) {
+                    this.classList.add('active');
+                    this.style.zIndex = '100';
+                    const icon = this.querySelector('.mm-icon');
+                    if (icon) icon.textContent = '-';
+                }
+            });
+        });
+        document.addEventListener('click', function() {
+            nodes.forEach(n => {
+                n.classList.remove('active');
+                const icon = n.querySelector('.mm-icon');
+                if (icon) icon.textContent = '+';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

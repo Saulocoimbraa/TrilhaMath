@@ -1,0 +1,22 @@
+# IDE e arquivos do sistema
+.gemini/
+.vscode/
+.idea/
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+
+# Backups e Scripts de automação
+*_backup/
+backup_*.zip
+*.bak
+*.py
+
+# Configurações de Agentes e Fluxos
+agents/
+
+# Outros
+node_modules/
+dist/
+build/
